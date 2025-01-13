@@ -18,54 +18,97 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 // import edu.wpi.first.wpilibj.DriverStation;
 // import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-// import frc.robot.Constants.DriveConstants;
 
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 
 public class SwerveSubsystem extends SubsystemBase {
-  
+
+  private Field2d field = new Field2d();
+
   private final SwerveModule frontLeft = new SwerveModule(
     Constants.FrontLeft.kDriveMotorID, 
     Constants.FrontLeft.kTurnMotorID, 
     Constants.FrontLeft.kDriveMotorReversed, 
     Constants.FrontLeft.kTurningMotorReversed, 
-    Constants.FrontLeft.kAbsoluteEncoderID);
+    Constants.FrontLeft.kAbsoluteEncoderID,
+    Constants.FrontLeft.kFrontLeftEncoderOffset);
   
   private final SwerveModule frontRight = new SwerveModule(
     Constants.FrontRight.kDriveMotorID, 
     Constants.FrontRight.kTurnMotorID, 
     Constants.FrontRight.kDriveMotorReversed, 
     Constants.FrontRight.kTurningMotorReversed, 
-    Constants.FrontRight.kAbsoluteEncoderID);
+    Constants.FrontRight.kAbsoluteEncoderID,
+    Constants.FrontRight.kFrontRightEncoderOffset);
 
   private final SwerveModule backLeft = new SwerveModule(
     Constants.BackLeft.kDriveMotorID, 
     Constants.BackLeft.kTurnMotorID, 
     Constants.BackLeft.kDriveMotorReversed, 
     Constants.BackLeft.kTurningMotorReversed, 
-    Constants.BackLeft.kAbsoluteEncoderID);
+    Constants.BackLeft.kAbsoluteEncoderID,
+    Constants.BackLeft.kBackLeftEncoderOffset);
   
   private final SwerveModule backRight = new SwerveModule(
     Constants.BackRight.kDriveMotorID, 
     Constants.BackRight.kTurnMotorID, 
     Constants.BackRight.kDriveMotorReversed, 
     Constants.BackRight.kTurningMotorReversed, 
-    Constants.BackRight.kAbsoluteEncoderID);
+    Constants.BackRight.kAbsoluteEncoderID,
+    Constants.BackRight.kBackRightEncoderOffset);
 
   // private final AHRS gyro = new AHRS(SPI.Port.kMXP);
   private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
   private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.RobotStructure.kDriveKinematics, new Rotation2d(0), 
     getPositions());
 
+  private RobotConfig config = null;
+
   public void zeroHeading(){
     gyro.reset();
+
+    if (config == null) {
+      try {
+        config = RobotConfig.fromGUISettings();
+      } catch (Exception e) {
+        // Handle exception as needed
+        e.printStackTrace();
+      }
+      AutoBuilder.configure(
+        this::getPose, 
+        this::resetPose, 
+        this::getCurrentSpeeds, 
+        (speeds, feedforwards) -> drive(speeds), 
+        new PPHolonomicDriveController(
+          new PIDConstants(5,0,0),
+          new PIDConstants(5,0,0)
+        ),
+        config, 
+        () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+          return true;
+          
+          //var alliance = DriverStation.getAlliance();
+          //if (alliance.isPresent()) {
+          //  return alliance.get() == DriverStation.Alliance.Red;
+          //}
+          //return false;
+        },
+        this
+      );
+    }
 
 
 
@@ -86,37 +129,7 @@ public class SwerveSubsystem extends SubsystemBase {
   //    this);
   // }
 
-    RobotConfig config = (RobotConfig) null;
-    try{
-      config = RobotConfig.fromGUISettings();
-    } catch (Exception e) {
-      // Handle exception as needed
-      e.printStackTrace();
-    }
-    AutoBuilder.configure(
-      this::getPose, 
-      this::resetPose, 
-      this::getCurrentSpeeds, 
-      (speeds, feedforwards) -> drive(speeds), 
-      new PPHolonomicDriveController(
-        new PIDConstants(5,0,0),
-        new PIDConstants(5,0,0)
-      ),
-      config, 
-      () -> {
-        // Boolean supplier that controls when the path will be mirrored for the red alliance
-        // This will flip the path being followed to the red side of the field.
-        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-        return true;
-        
-        //var alliance = DriverStation.getAlliance();
-        //if (alliance.isPresent()) {
-        //  return alliance.get() == DriverStation.Alliance.Red;
-        //}
-        //return false;
-      },
-      this
-    );
+    
 
   // public static final HolonomicPathFollowerConfig kHolonomicPathFollowerConfig = new HolonomicPathFollowerConfig(
   //           new PIDConstants(5,0,0),
@@ -133,6 +146,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
       try {
         Thread.sleep(1000);
+
         zeroHeading();
       } catch (Exception e){}
 
@@ -176,12 +190,17 @@ public class SwerveSubsystem extends SubsystemBase {
 
 
 
+  StructArrayPublisher<SwerveModuleState> moduleState = NetworkTableInstance.getDefault()
+.getStructArrayTopic("Module States", SwerveModuleState.struct).publish();
   @Override
   public void periodic(){
-
+    field.setRobotPose(getPose());
     odometer.update(getRotation2d(), getPositions());
     SmartDashboard.putNumber("Robot Heading", getHeading());
-    SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+    // SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+    SmartDashboard.putData("Robot Location", field);
+    moduleState.set(getModuleStates());
+    
   }
 
   public void stopModules(){
@@ -193,10 +212,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void setModuleStates(SwerveModuleState[] desiredStates){
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.DriveConstants.kPhysicalMaxSpeedMPS);
-    frontLeft.setDesiredState(desiredStates[0]);;
-    frontRight.setDesiredState(desiredStates[1]);;
-    backLeft.setDesiredState(desiredStates[2]);;
-    backRight.setDesiredState(desiredStates[3]);;
+    frontLeft.setDesiredState(desiredStates[0]);
+    frontRight.setDesiredState(desiredStates[1]);
+    backLeft.setDesiredState(desiredStates[2]);
+    backRight.setDesiredState(desiredStates[3]);
 
   }
 

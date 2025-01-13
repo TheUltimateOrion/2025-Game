@@ -92,6 +92,7 @@ public class Constants {
         public static final boolean kDriveMotorReversed = false;
         public static final boolean kTurningMotorReversed = true;
         public static final int kAbsoluteEncoderID = 1;
+        public static final double kFrontLeftEncoderOffset = 0.227783203125;
     }
 
     public static class FrontRight{
@@ -101,6 +102,7 @@ public class Constants {
         public static final boolean kDriveMotorReversed = true;
         public static final boolean kTurningMotorReversed = true;
         public static final int kAbsoluteEncoderID = 4;
+        public static final double kFrontRightEncoderOffset = 0.248291015625;
     }
 
     public static class BackLeft{
@@ -110,6 +112,7 @@ public class Constants {
         public static final boolean kDriveMotorReversed = true;
         public static final boolean kTurningMotorReversed = true;
         public static final int kAbsoluteEncoderID = 2;
+        public static final double kBackLeftEncoderOffset = -0.29052734375;
 
     }
 
@@ -120,6 +123,7 @@ public class Constants {
         public static final boolean kDriveMotorReversed = false;
         public static final boolean kTurningMotorReversed = true;
         public static final int kAbsoluteEncoderID = 3;
+        public static final double kBackRightEncoderOffset = 0.188232421875;
     }
 
     public static class Hook{
@@ -163,7 +167,8 @@ public class Constants {
         public static final int redIDS = 3;
         public static final int redIDP = 4;
 
-        AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+        // AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
+        AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
         Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0,0.5), 
             new Rotation3d(0,0,0)); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.

@@ -7,8 +7,8 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PS4Controller;
+// import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -35,39 +35,38 @@ public class RobotContainer {
   private final ShooterSubsystem shooter = new ShooterSubsystem(Constants.Shooter.mID, Constants.Shooter.mInverted);
   private final PhotonVision photonVision = new PhotonVision("1");
   
-  private final XboxController xbox = new XboxController(0);
-  private final Joystick joystick = new Joystick(0);
+  private final PS4Controller ps4 = new PS4Controller(0);
+  // private final Joystick joystick = new Joystick(0);
 
   public RobotContainer() {
 
     //create named commands for pathplanner here
       NamedCommands.registerCommand("Drop", new ShootNote(shooter, ()-> 0.1));
 
-      
       swerveSubsystem.setDefaultCommand(new SwerveJoystickAuto(
       swerveSubsystem, 
-      () -> xbox.getLeftY(),
-      () -> -xbox.getLeftX(),
-      () -> -xbox.getRightY(),
-      () -> -xbox.getRightX()));
+      () -> ps4.getLeftY(),
+      () -> -ps4.getLeftX(),
+      () -> -ps4.getRightY(),
+      () -> -ps4.getRightX()));
 
 
-      shooter.setDefaultCommand(new ShootNote(shooter, () -> xbox.getRightTriggerAxis()));
+      shooter.setDefaultCommand(new ShootNote(shooter, () -> ps4.getR2Axis()));
     configureBindings();
   }
 
   private void configureBindings() {
 
-    new JoystickButton(xbox, 4).onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
-    new POVButton(joystick, 0).whileTrue(new HookDPAD(hook, true));
-    new POVButton(joystick, 180).whileTrue(new HookDPAD(hook, false));
-    new JoystickButton(xbox, 5).whileTrue(new SwerveJoystickCmd(
+    new JoystickButton(ps4, 4).onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
+    new POVButton(ps4, 0).whileTrue(new HookDPAD(hook, true));
+    new POVButton(ps4, 180).whileTrue(new HookDPAD(hook, false));
+    new JoystickButton(ps4, 5).whileTrue(new SwerveJoystickCmd(
       swerveSubsystem, 
-      () -> xbox.getLeftY(),
-      () -> -xbox.getLeftX(),
-      () -> -xbox.getRightX()
+      () -> -ps4.getLeftY(),
+      () -> -ps4.getLeftX(),
+      () -> -ps4.getRightX()
       ));
-    new JoystickButton(xbox, 3).whileTrue(new AutoAim(swerveSubsystem, photonVision));
+    new JoystickButton(ps4, 3).whileTrue(new AutoAim(swerveSubsystem, photonVision));
 
   }
 

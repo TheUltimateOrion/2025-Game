@@ -52,7 +52,7 @@ public class TunerConstants {
     private static final boolean kInvertLeftSide = false;
     private static final boolean kInvertRightSide = true;
 
-    private static final String kCANbusName = "";
+    private static final String kCANbusName = "*";
 
 
     // These are only used for simulation
@@ -123,15 +123,15 @@ private static final LegacySwerveDrivetrainConstants DrivetrainConstants = new L
 
 
     @SuppressWarnings("unused")
-private static final LegacySwerveModuleConstants FrontLeft = ConstantCreator.createModuleConstants(
+    private static final LegacySwerveModuleConstants FrontLeft = ConstantCreator.createModuleConstants(
             kFrontLeftSteerMotorId, kFrontLeftDriveMotorId, kFrontLeftEncoderId, kFrontLeftEncoderOffset, Units.inchesToMeters(kFrontLeftXPosInches), Units.inchesToMeters(kFrontLeftYPosInches), kInvertLeftSide);
     @SuppressWarnings("unused")
-private static final LegacySwerveModuleConstants FrontRight = ConstantCreator.createModuleConstants(
+    private static final LegacySwerveModuleConstants FrontRight = ConstantCreator.createModuleConstants(
             kFrontRightSteerMotorId, kFrontRightDriveMotorId, kFrontRightEncoderId, kFrontRightEncoderOffset, Units.inchesToMeters(kFrontRightXPosInches), Units.inchesToMeters(kFrontRightYPosInches), kInvertRightSide);
     @SuppressWarnings("unused")
-private static final LegacySwerveModuleConstants BackLeft = ConstantCreator.createModuleConstants(
+    private static final LegacySwerveModuleConstants BackLeft = ConstantCreator.createModuleConstants(
             kBackLeftSteerMotorId, kBackLeftDriveMotorId, kBackLeftEncoderId, kBackLeftEncoderOffset, Units.inchesToMeters(kBackLeftXPosInches), Units.inchesToMeters(kBackLeftYPosInches), kInvertLeftSide);
     @SuppressWarnings("unused")
-private static final LegacySwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
+    private static final LegacySwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
             kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId, kBackRightEncoderOffset, Units.inchesToMeters(kBackRightXPosInches), Units.inchesToMeters(kBackRightYPosInches), kInvertRightSide);
 }

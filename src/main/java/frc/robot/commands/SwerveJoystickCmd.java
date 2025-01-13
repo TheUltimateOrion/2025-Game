@@ -8,11 +8,11 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Constants.RobotStructure;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class SwerveJoystickCmd extends Command {
@@ -42,8 +42,8 @@ public class SwerveJoystickCmd extends Command {
   @Override
   public void initialize() {}
 
-
-
+StructPublisher<ChassisSpeeds> chassisSpeed = NetworkTableInstance.getDefault()
+.getStructTopic("Chassis Speeds", ChassisSpeeds.struct).publish();
   
   @Override
   public void execute() {
@@ -72,20 +72,16 @@ public class SwerveJoystickCmd extends Command {
     //make Chassis speeds
     ChassisSpeeds chassisSpeeds;
     chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpd, ySpd, turnSpd, swerveSubsystem.getRotation2d());
-    
+    chassisSpeed.set(chassisSpeeds);
 
-    //convert chassis speeds to module states
-    SwerveModuleState[] moduleStates = RobotStructure.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
-
-    //output states to modules
-    swerveSubsystem.setModuleStates(moduleStates);
+    swerveSubsystem.drive(chassisSpeeds);
 
 
-    SwerveModuleState[] states = swerveSubsystem.getModuleStates();
-    SmartDashboard.putString("1", states[0].toString());
-    SmartDashboard.putString("2", states[1].toString());
-    SmartDashboard.putString("3", states[2].toString());
-    SmartDashboard.putString("4", states[3].toString());
+    // SwerveModuleState[] states = swerveSubsystem.getModuleStates();
+    // SmartDashboard.putString("1", states[0].toString());
+    // SmartDashboard.putString("2", states[1].toString());
+    // SmartDashboard.putString("3", states[2].toString());
+    // SmartDashboard.putString("4", states[3].toString());
     
 
   }

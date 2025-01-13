@@ -4,9 +4,9 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
+// import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
+// import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,15 +15,16 @@ public class ShooterSubsystem extends SubsystemBase {
   
   private final TalonFX motor;
   /** Creates a new ShooterSubsystem. */
+  @SuppressWarnings("removal")
   public ShooterSubsystem(int ID, boolean Inverted) {
 
-    motor = new TalonFX(ID);
-    // motor.setInverted(Inverted);
+    motor = new TalonFX(ID, "*");
+    motor.setInverted(Inverted);
 
-    MotorOutputConfigs config = new MotorOutputConfigs();
-    config.Inverted = Inverted ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive;
+    // MotorOutputConfigs config = new MotorOutputConfigs();
+    // config.Inverted = Inverted ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive;
 
-    motor.getConfigurator().apply(config);
+    // motor.getConfigurator().apply(config);
 
   }
 
