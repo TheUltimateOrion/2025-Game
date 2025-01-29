@@ -18,7 +18,7 @@ public class ShooterSubsystem extends SubsystemBase {
   @SuppressWarnings("removal")
   public ShooterSubsystem(int ID, boolean Inverted) {
 
-    motor = new TalonFX(ID, "*");
+    motor = new TalonFX(ID, "rio");
     motor.setInverted(Inverted);
 
     // MotorOutputConfigs config = new MotorOutputConfigs();

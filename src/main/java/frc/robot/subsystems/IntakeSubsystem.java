@@ -20,8 +20,8 @@ public class IntakeSubsystem extends SubsystemBase {
   @SuppressWarnings("removal")
   public IntakeSubsystem(int m_1ID, boolean m_1Inverted, int m_2ID, boolean m_2Inverted) {
 
-    m_1 = new TalonFX(m_1ID, "*");
-    m_2 = new TalonFX(m_2ID, "*");
+    m_1 = new TalonFX(m_1ID, "rio");
+    m_2 = new TalonFX(m_2ID, "rio");
 
     m_1.setInverted(m_1Inverted);
     m_2.setInverted(m_2Inverted);

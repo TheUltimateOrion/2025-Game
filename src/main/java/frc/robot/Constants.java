@@ -49,14 +49,14 @@ public class Constants {
     }
 
     public static class DriveConstants{
-        public static final double kPhysicalMaxSpeedMPS = 18;
+        public static final double kPhysicalMaxSpeedMPS = 18 * 2;
         public static final double kPhysicalMaxAngularSpeedRPM = 30 * Math.PI;
 
 
         public static final double kTeleDriveMaxAccelerationUPS = 5;
         public static final double kTeleDriveMaxAngularAccelerationUPS = 5;
 
-        public static final double kTeleDriveMaxSpeedMPS = kPhysicalMaxSpeedMPS/ 2;
+        public static final double kTeleDriveMaxSpeedMPS = kPhysicalMaxSpeedMPS / 2;
         public static final double kTeleDriveMaxAngularSpeedRPS = kPhysicalMaxAngularSpeedRPM / 2;
         
         public static final int kXAxis = 0;
@@ -99,10 +99,10 @@ public class Constants {
         
         public static final int kDriveMotorID = 41;
         public static final int kTurnMotorID = 42;
-        public static final boolean kDriveMotorReversed = true;
+        public static final boolean kDriveMotorReversed = false;
         public static final boolean kTurningMotorReversed = true;
         public static final int kAbsoluteEncoderID = 4;
-        public static final double kFrontRightEncoderOffset = 0.248291015625;
+        public static final double kFrontRightEncoderOffset = -Math.PI / 4; // 0.248291015625;
     }
 
     public static class BackLeft{

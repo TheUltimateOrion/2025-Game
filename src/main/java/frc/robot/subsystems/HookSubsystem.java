@@ -17,8 +17,8 @@ public class HookSubsystem extends SubsystemBase {
   /** Creates a new Hook. */
   public HookSubsystem(int leftID, int rightID) {
 
-    m_left = new TalonFX(leftID, "*");
-    m_right = new TalonFX(rightID, "*");
+    m_left = new TalonFX(leftID, "rio");
+    m_right = new TalonFX(rightID, "rio");
 
     resetEncoders();
 

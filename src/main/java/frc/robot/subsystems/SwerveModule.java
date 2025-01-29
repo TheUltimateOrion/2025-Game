@@ -52,15 +52,15 @@ public class SwerveModule extends SubsystemBase {
 
   /** Creates a new SwerveModule. */
   public SwerveModule(int driveMotorID, int turnMotorID, boolean driveMotorReversed, boolean turningMotorReversed, int absoluteEncoderID, double absoluteEncoderOff) {
-    absoluteEncoder = new CANcoder(absoluteEncoderID, "*");
+    absoluteEncoder = new CANcoder(absoluteEncoderID, "rio");
     CANcoderConfiguration cc_cfg = new CANcoderConfiguration().withMagnetSensor(new MagnetSensorConfigs()
       .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
       .withMagnetOffset(absoluteEncoderOff)
     );
     absoluteEncoder.getConfigurator().apply(cc_cfg);
 
-    driveMotor = new TalonFX(driveMotorID, "*");
-    turnMotor = new TalonFX(turnMotorID, "*");
+    driveMotor = new TalonFX(driveMotorID, "rio");
+    turnMotor = new TalonFX(turnMotorID, "rio");
     
     driveMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(driveMotorReversed ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive));
     turnMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(turningMotorReversed ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive));
