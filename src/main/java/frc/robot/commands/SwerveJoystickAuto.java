@@ -97,16 +97,16 @@ public class SwerveJoystickAuto extends Command {
 
 
     SwerveModuleState[] states = swerveSubsystem.getModuleStates();
-    SmartDashboard.putString("1", states[0].toString());
-    SmartDashboard.putString("2", states[1].toString());
-    SmartDashboard.putString("3", states[2].toString());
-    SmartDashboard.putString("4", states[3].toString());
-    SmartDashboard.putNumber("target Angle", angle);
-    SmartDashboard.putNumber("turn speed", turnSpd);
-    SmartDashboard.putNumber("x speed", xSpd);
-    SmartDashboard.putNumber("y speed", ySpd);
-    SmartDashboard.putNumber("xTurn", xTurn);
-    SmartDashboard.putNumber("yTurn", yTurn);
+    // SmartDashboard.putString("1", states[0].toString());
+    // SmartDashboard.putString("2", states[1].toString());
+    // SmartDashboard.putString("3", states[2].toString());
+    // // SmartDashboard.putString("4", states[3].toString());
+    // SmartDashboard.putNumber("target Angle", angle);
+    // SmartDashboard.putNumber("turn speed", turnSpd);
+    // SmartDashboard.putNumber("x speed", xSpd);
+    // SmartDashboard.putNumber("y speed", ySpd);
+    // SmartDashboard.putNumber("xTurn", xTurn);
+    // SmartDashboard.putNumber("yTurn", yTurn);
 
   }
 

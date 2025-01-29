@@ -17,6 +17,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -25,8 +26,10 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -38,9 +41,10 @@ public class SwerveModule extends SubsystemBase {
   private final PIDController turningPID;
 
   private final CANcoder absoluteEncoder;
+
   private final DCMotorSim m_driveMotorSimModel = new DCMotorSim(
-    LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), 0.001, Constants.SwerveModule.kDriveMotorGearRatio)
-    , DCMotor.getKrakenX60Foc(1));
+    LinearSystemId.createDCMotorSystem(DCMotor.getFalcon500Foc(1), 0.001, Constants.SwerveModule.kDriveMotorGearRatio)
+    , DCMotor.getFalcon500Foc(1));
 
   private final DCMotorSim m_turnMotorSimModel = new DCMotorSim(
       LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), 0.001, Constants.SwerveModule.kTurnMotorGearRatio)
@@ -75,20 +79,20 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public double getDrivePosition(){
-    return driveMotor.getRotorPosition(true).getValueAsDouble() * Constants.SwerveModule.kDriveEncoderRotation2Meter;
+    return driveMotor.getRotorPosition().getValueAsDouble() * Constants.SwerveModule.kDriveEncoderRotation2Meter;
   }
 
   public double getTurnPosition(){
-    return turnMotor.getRotorPosition(true).getValueAsDouble() * Constants.SwerveModule.kTurnEncoderRotation2Rad;
+    return turnMotor.getRotorPosition().getValueAsDouble() * Constants.SwerveModule.kTurnEncoderRotation2Rad;
 
   }
 
   public double getDriveVelocity(){
-    return driveMotor.getRotorVelocity(true).getValueAsDouble() * Constants.SwerveModule.kDriveEncoderRPS2MPS;
+    return driveMotor.getRotorVelocity().getValueAsDouble() * Constants.SwerveModule.kDriveEncoderRPS2MPS;
   }
 
   public double getTurnVelocity(){
-    return turnMotor.getRotorVelocity(true).getValueAsDouble() * Constants.SwerveModule.kTurnEncoderRPS2MPS;
+    return turnMotor.getRotorVelocity().getValueAsDouble() * Constants.SwerveModule.kTurnEncoderRPS2MPS;
 
   }
 
@@ -118,6 +122,11 @@ public class SwerveModule extends SubsystemBase {
     // state = SwerveModuleState.optimize(state, getState().angle);
     state.optimize(getState().angle);
     driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMPS);
+    if (absoluteEncoder.getDeviceID() == 1) {
+      SmartDashboard.putNumber("Current turn", getTurnPosition());
+      SmartDashboard.putNumber("Next turn", state.angle.getRadians());
+
+    }
     turnMotor.set(turningPID.calculate(getTurnPosition(), state.angle.getRadians()));
   }
 
@@ -158,11 +167,10 @@ public class SwerveModule extends SubsystemBase {
    // apply the new rotor position and velocity to the TalonFX;
    // note that this is rotor position/velocity (before gear ratio), but
    // DCMotorSim returns mechanism position/velocity (after gear ratio)
-    driveMotorSim.setRawRotorPosition(m_driveMotorSimModel.getAngularPosition().times(Constants.SwerveModule.kDriveMotorGearRatio));
-    driveMotorSim.setRotorVelocity(m_driveMotorSimModel.getAngularVelocity().times(Constants.SwerveModule.kDriveMotorGearRatio));
-
-    turnMotorSim.setRawRotorPosition(m_turnMotorSimModel.getAngularPosition().times(Constants.SwerveModule.kTurnMotorGearRatio));
-    turnMotorSim.setRotorVelocity(m_turnMotorSimModel.getAngularVelocity().times(Constants.SwerveModule.kTurnMotorGearRatio));
+    driveMotorSim.setRawRotorPosition(Constants.SwerveModule.kDriveMotorGearRatio * m_driveMotorSimModel.getAngularPositionRotations());
+    driveMotorSim.setRotorVelocity(Constants.SwerveModule.kDriveMotorGearRatio * Units.radiansToRotations(m_driveMotorSimModel.getAngularVelocityRadPerSec()));
+    turnMotorSim.setRawRotorPosition(Constants.SwerveModule.kTurnMotorGearRatio * m_turnMotorSimModel.getAngularPositionRotations());
+    turnMotorSim.setRotorVelocity(Constants.SwerveModule.kTurnMotorGearRatio * Units.radiansToRotations(m_turnMotorSimModel.getAngularVelocityRadPerSec()));
   }
 }
 

@@ -62,9 +62,9 @@ StructPublisher<ChassisSpeeds> chassisSpeed = NetworkTableInstance.getDefault()
     if (Math.abs(turnSpd) <= Constants.DriveConstants.kJoystickDeadband){
       turnSpd = 0;
     }
-    SmartDashboard.putNumber("turn speed", turnSpd);
-    SmartDashboard.putNumber("x speed", xSpd);
-    SmartDashboard.putNumber("y speed", ySpd);
+    // SmartDashboard.putNumber("turn speed", turnSpd);
+    // SmartDashboard.putNumber("x speed", xSpd);
+    // SmartDashboard.putNumber("y speed", ySpd);
     xSpd = xSpdLimiter.calculate(xSpd) * Constants.DriveConstants.kTeleDriveMaxSpeedMPS;
     ySpd = ySpdLimiter.calculate(ySpd) * Constants.DriveConstants.kTeleDriveMaxSpeedMPS;
     turnSpd = turnSpdLimiter.calculate(turnSpd) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRPS;
