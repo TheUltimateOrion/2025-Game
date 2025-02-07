@@ -11,7 +11,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.RobotStructure;
@@ -96,7 +96,7 @@ public class SwerveJoystickAuto extends Command {
     swerveSubsystem.setModuleStates(moduleStates);
 
 
-    SwerveModuleState[] states = swerveSubsystem.getModuleStates();
+    // SwerveModuleState[] states = swerveSubsystem.getModuleStates();
     // SmartDashboard.putString("1", states[0].toString());
     // SmartDashboard.putString("2", states[1].toString());
     // SmartDashboard.putString("3", states[2].toString());

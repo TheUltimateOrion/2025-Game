@@ -17,7 +17,6 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -68,7 +67,6 @@ public class SwerveModule extends SubsystemBase {
     TalonFXConfiguration fx_cfg = new TalonFXConfiguration().withFeedback(new FeedbackConfigs()
       .withSensorToMechanismRatio(1.0)
       .withRotorToSensorRatio(12.8)
-      .withFusedCANcoder(absoluteEncoder)
       );
 
     turnMotor.getConfigurator().apply(fx_cfg);

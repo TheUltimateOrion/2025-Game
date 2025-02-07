@@ -99,17 +99,17 @@ public class Constants {
         
         public static final int kDriveMotorID = 41;
         public static final int kTurnMotorID = 42;
-        public static final boolean kDriveMotorReversed = false;
+        public static final boolean kDriveMotorReversed = true;
         public static final boolean kTurningMotorReversed = true;
         public static final int kAbsoluteEncoderID = 4;
-        public static final double kFrontRightEncoderOffset = -Math.PI / 4; // 0.248291015625;
+        public static final double kFrontRightEncoderOffset = 0.248291015625;
     }
 
     public static class BackLeft{
         
         public static final int kDriveMotorID = 21;
         public static final int kTurnMotorID = 22;
-        public static final boolean kDriveMotorReversed = true;
+        public static final boolean kDriveMotorReversed = false;
         public static final boolean kTurningMotorReversed = true;
         public static final int kAbsoluteEncoderID = 2;
         public static final double kBackLeftEncoderOffset = -0.29052734375;
