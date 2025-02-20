@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -37,6 +38,12 @@ public class RobotContainer {
   private final XboxController controller = new XboxController(0);
   // private final Joystick joystick = new Joystick(0);
 
+  private final DCMotor dcMotor = new DCMotor(Constants.DCMotor.motorID); // TODO: add actual ID (1)
+
+  // TODO: add the real IDs if required
+  private final DigitalInput toplimitSwitch = new DigitalInput(0);
+  private final DigitalInput bottomlimitSwitch = new DigitalInput(1);
+
   public RobotContainer() {
 
     //create named commands for pathplanner here
@@ -57,8 +64,34 @@ public class RobotContainer {
   private void configureBindings() {
 
     new JoystickButton(controller, 4).onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
-    new POVButton(controller, 0).whileTrue(new HookDPAD(hook, true));
-    new POVButton(controller, 180).whileTrue(new HookDPAD(hook, false));
+    // new POVButton(controller, 0).whileTrue(new HookDPAD(hook, true));
+    // new POVButton(controller, 180).whileTrue(new HookDPAD(hook, false));
+
+    // ! old way of controlling motor. sets speed to 0.5 when button 1 is pressed, and -0.5 when button 2 is pressed
+    // up dpad
+    new POVButton(controller, 0).whileTrue(new InstantCommand(() -> {
+      dcMotor.setSpeed(Constants.DCMotor.motorSpeed);
+      if (toplimitSwitch.get()) {
+        dcMotor.stop();
+      }
+    }));
+
+    // down dpad
+    new POVButton(controller, 180).whileTrue(new InstantCommand(() -> {
+      dcMotor.setSpeed(Constants.DCMotor.motorSpeed);
+      if (bottomlimitSwitch.get()) {
+        dcMotor.stop();
+      }
+    }));
+
+    // left dpad
+    new POVButton(controller, 270).onTrue(new InstantCommand(() -> dcMotor.stop()));
+
+    // * new way. adds 0.25 to speed or subtracts 0.25 from speed when button 1 or 2 is pressed, respectively
+    // new POVButton(joystick, 0).onTrue(new InstantCommand(() -> dcMotor.addSpeed()));
+    // new POVButton(joystick, 180).onTrue(new InstantCommand(() -> dcMotor.subtractSpeed()));
+    // new POVButton(joystick, 270).onTrue(new InstantCommand(() -> dcMotor.stop()));
+
     new JoystickButton(controller, 5).whileTrue(new SwerveJoystickCmd(
       swerveSubsystem, 
       () -> controller.getLeftY(),
