@@ -27,37 +27,33 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
-  
+
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   private final HookSubsystem hook = new HookSubsystem(Constants.Hook.leftHook, Constants.Hook.rightHook);
   @SuppressWarnings("unused")
-  private final IntakeSubsystem intake = new IntakeSubsystem(Constants.Intake.m_1ID, Constants.Intake.m_1Inverted, Constants.Intake.m_2ID, Constants.Intake.m_2Inverted);
+  private final IntakeSubsystem intake = new IntakeSubsystem(Constants.Intake.m_1ID, Constants.Intake.m_1Inverted,
+      Constants.Intake.m_2ID, Constants.Intake.m_2Inverted);
   private final ShooterSubsystem shooter = new ShooterSubsystem(Constants.Shooter.mID, Constants.Shooter.mInverted);
   private final PhotonVision photonVision = new PhotonVision("1");
-  
+
   private final XboxController controller = new XboxController(0);
   // private final Joystick joystick = new Joystick(0);
 
   private final DCMotor dcMotor = new DCMotor(Constants.DCMotor.motorID); // TODO: add actual ID (1)
 
-  // TODO: add the real IDs if required
-  private final DigitalInput toplimitSwitch = new DigitalInput(0);
-  private final DigitalInput bottomlimitSwitch = new DigitalInput(1);
-
   public RobotContainer() {
 
-    //create named commands for pathplanner here
-      NamedCommands.registerCommand("Drop", new ShootNote(shooter, ()-> 0.1));
+    // create named commands for pathplanner here
+    NamedCommands.registerCommand("Drop", new ShootNote(shooter, () -> 0.1));
 
-      swerveSubsystem.setDefaultCommand(new SwerveJoystickAuto(
-      swerveSubsystem, 
-      () -> controller.getLeftY(),
-      () -> controller.getLeftX(),
-      () -> -controller.getRightY(),
-      () -> -controller.getRightX()));
+    swerveSubsystem.setDefaultCommand(new SwerveJoystickAuto(
+        swerveSubsystem,
+        () -> controller.getLeftY(),
+        () -> controller.getLeftX(),
+        () -> -controller.getRightY(),
+        () -> -controller.getRightX()));
 
-
-      shooter.setDefaultCommand(new ShootNote(shooter, () -> controller.getRightTriggerAxis()));
+    shooter.setDefaultCommand(new ShootNote(shooter, () -> controller.getRightTriggerAxis()));
     configureBindings();
   }
 
@@ -67,37 +63,16 @@ public class RobotContainer {
     // new POVButton(controller, 0).whileTrue(new HookDPAD(hook, true));
     // new POVButton(controller, 180).whileTrue(new HookDPAD(hook, false));
 
-    // ! old way of controlling motor. sets speed to 0.5 when button 1 is pressed, and -0.5 when button 2 is pressed
-    // up dpad
-    new POVButton(controller, 0).whileTrue(new InstantCommand(() -> {
-      dcMotor.setSpeed(Constants.DCMotor.motorSpeed);
-      if (toplimitSwitch.get()) {
-        dcMotor.stop();
-      }
-    }));
-
-    // down dpad
-    new POVButton(controller, 180).whileTrue(new InstantCommand(() -> {
-      dcMotor.setSpeed(Constants.DCMotor.motorSpeed);
-      if (bottomlimitSwitch.get()) {
-        dcMotor.stop();
-      }
-    }));
-
-    // left dpad
+    // up, down, left -> forward, backward, stop
+    new POVButton(controller, 0).whileTrue(new InstantCommand(() -> dcMotor.setSpeed(Constants.DCMotor.motorSpeed)));
+    new POVButton(controller, 180).whileTrue(new InstantCommand(() -> dcMotor.setSpeed(-Constants.DCMotor.motorSpeed)));
     new POVButton(controller, 270).onTrue(new InstantCommand(() -> dcMotor.stop()));
 
-    // * new way. adds 0.25 to speed or subtracts 0.25 from speed when button 1 or 2 is pressed, respectively
-    // new POVButton(joystick, 0).onTrue(new InstantCommand(() -> dcMotor.addSpeed()));
-    // new POVButton(joystick, 180).onTrue(new InstantCommand(() -> dcMotor.subtractSpeed()));
-    // new POVButton(joystick, 270).onTrue(new InstantCommand(() -> dcMotor.stop()));
-
     new JoystickButton(controller, 5).whileTrue(new SwerveJoystickCmd(
-      swerveSubsystem, 
-      () -> controller.getLeftY(),
-      () -> -controller.getLeftX(),
-      () -> -controller.getRightX()
-      ));
+        swerveSubsystem,
+        () -> controller.getLeftY(),
+        () -> -controller.getLeftX(),
+        () -> -controller.getRightX()));
     new JoystickButton(controller, 3).whileTrue(new AutoAim(swerveSubsystem, photonVision));
 
   }
