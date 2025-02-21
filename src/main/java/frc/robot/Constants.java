@@ -50,11 +50,11 @@ public class Constants {
 
     public static class DriveConstants{
         public static final double kPhysicalMaxSpeedMPS = 18 * 2;
-        public static final double kPhysicalMaxAngularSpeedRPM = 30 * Math.PI;
+        public static final double kPhysicalMaxAngularSpeedRPM = 5 * Math.PI; // 30 * Math.PI;
 
 
         public static final double kTeleDriveMaxAccelerationUPS = 5;
-        public static final double kTeleDriveMaxAngularAccelerationUPS = 5;
+        public static final double kTeleDriveMaxAngularAccelerationUPS = 1; // 5;
 
         public static final double kTeleDriveMaxSpeedMPS = kPhysicalMaxSpeedMPS / 2;
         public static final double kTeleDriveMaxAngularSpeedRPS = kPhysicalMaxAngularSpeedRPM / 2;
