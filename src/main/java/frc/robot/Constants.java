@@ -211,4 +211,9 @@ public class Constants {
         */
     }
 
+    public static class DCMotor {
+        public static final int motorID = 1;
+        public static final double motorSpeed = 0.5;
+    }
+
 }
