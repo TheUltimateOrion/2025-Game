@@ -65,6 +65,7 @@ StructPublisher<ChassisSpeeds> chassisSpeed = NetworkTableInstance.getDefault()
     xSpd = xSpdLimiter.calculate(xSpd) * Constants.DriveConstants.kTeleDriveMaxSpeedMPS;
     ySpd = ySpdLimiter.calculate(ySpd) * Constants.DriveConstants.kTeleDriveMaxSpeedMPS;
     turnSpd = turnSpdLimiter.calculate(turnSpd) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRPS;
+    turnSpd = Math.min(10.0, Math.max(turnSpd, -10.0));
 
     //make Chassis speeds
     ChassisSpeeds chassisSpeeds;
