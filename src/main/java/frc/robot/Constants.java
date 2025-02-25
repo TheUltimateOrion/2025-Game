@@ -50,11 +50,11 @@ public class Constants {
 
     public static class DriveConstants{
         public static final double kPhysicalMaxSpeedMPS = 18 * 2;
-        public static final double kPhysicalMaxAngularSpeedRPM = 30 * Math.PI;
+        public static final double kPhysicalMaxAngularSpeedRPM = 1.5 * Math.PI;
 
 
         public static final double kTeleDriveMaxAccelerationUPS = 5;
-        public static final double kTeleDriveMaxAngularAccelerationUPS = 5;
+        public static final double kTeleDriveMaxAngularAccelerationUPS = 1.5*Math.PI;
 
         public static final double kTeleDriveMaxSpeedMPS = kPhysicalMaxSpeedMPS / 2;
         public static final double kTeleDriveMaxAngularSpeedRPS = kPhysicalMaxAngularSpeedRPM / 2;
@@ -212,7 +212,9 @@ public class Constants {
     }
 
     public static class Elevator {
-        public static final int motorID = 1;
+        public static final int motorLeftID = 1;
+        public static final int motorRightID = 2;
+        
         public static final double motorSpeed = 0.5;
     }
 

@@ -36,7 +36,7 @@ public class RobotContainer {
   private final XboxController controller = new XboxController(0);
   // private final Joystick joystick = new Joystick(0);
 
-  private final ElevatorSystem dcMotor = new ElevatorSystem(Constants.Elevator.motorID);
+  private final ElevatorSystem elevator = new ElevatorSystem(Constants.Elevator.motorLeftID, Constants.Elevator.motorRightID);
 
   public RobotContainer() {
 
@@ -61,9 +61,9 @@ public class RobotContainer {
     // new POVButton(controller, 180).whileTrue(new HookDPAD(hook, false));
 
     // up, down, left -> forward, backward, stop
-    new POVButton(controller, 0).whileTrue(new InstantCommand(() -> dcMotor.setSpeed(Constants.Elevator.motorSpeed)));
-    new POVButton(controller, 180).whileTrue(new InstantCommand(() -> dcMotor.setSpeed(-Constants.Elevator.motorSpeed)));
-    new POVButton(controller, 270).onTrue(new InstantCommand(() -> dcMotor.stop()));
+    new POVButton(controller, 0).whileTrue(new InstantCommand(() -> elevator.setSpeed(Constants.Elevator.motorSpeed)));
+    new POVButton(controller, 180).whileTrue(new InstantCommand(() -> elevator.setSpeed(-Constants.Elevator.motorSpeed)));
+    new POVButton(controller, 270).onTrue(new InstantCommand(() -> elevator.stop()));
 
     new JoystickButton(controller, 5).whileTrue(new SwerveJoystickCmd(
         swerveSubsystem,
