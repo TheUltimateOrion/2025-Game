@@ -16,9 +16,6 @@ import frc.robot.Constants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class SwerveJoystickCmd extends Command {
-
-
-
   private final SwerveSubsystem swerveSubsystem;
   private final Supplier<Double> xSpdFunction, ySpdFunction, turnSpdFunction;
   private final SlewRateLimiter xSpdLimiter, ySpdLimiter, turnSpdLimiter;
@@ -64,10 +61,12 @@ StructPublisher<ChassisSpeeds> chassisSpeed = NetworkTableInstance.getDefault()
     }
     // SmartDashboard.putNumber("turn speed", turnSpd);
     // SmartDashboard.putNumber("x speed", xSpd);
+
     // SmartDashboard.putNumber("y speed", ySpd);
-    xSpd = xSpdLimiter.calculate(xSpd) * Constants.DriveConstants.kTeleDriveMaxSpeedMPS;
-    ySpd = ySpdLimiter.calculate(ySpd) * Constants.DriveConstants.kTeleDriveMaxSpeedMPS;
-    turnSpd = turnSpdLimiter.calculate(turnSpd) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRPS;
+    xSpd = xSpdLimiter.calculate(xSpd) * Constants.DriveConstants.kTeleDriveMaxSpeedMPS * 0.01;
+    ySpd = ySpdLimiter.calculate(ySpd) * Constants.DriveConstants.kTeleDriveMaxSpeedMPS * 0.01;
+    turnSpd = turnSpdLimiter.calculate(turnSpd) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRPS *0.05;
+    turnSpd = Math.min(Math.PI/32, Math.max(turnSpd, -Math.PI/32));
 
     //make Chassis speeds
     ChassisSpeeds chassisSpeeds;

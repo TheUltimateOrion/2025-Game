@@ -7,20 +7,17 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.AutoAim;
-import frc.robot.commands.HookDPAD;
-// import frc.robot.commands.NoteIntake;
 import frc.robot.commands.ShootNote;
 import frc.robot.commands.SwerveJoystickAuto;
 import frc.robot.commands.SwerveJoystickCmd;
-// import frc.robot.commands.ReverseShooter;
-import frc.robot.subsystems.HookSubsystem;
+import frc.robot.subsystems.ElevatorSystem;
+// import frc.robot.subsystems.HookSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -29,7 +26,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class RobotContainer {
 
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  private final HookSubsystem hook = new HookSubsystem(Constants.Hook.leftHook, Constants.Hook.rightHook);
+  // private final HookSubsystem hook = new HookSubsystem(Constants.Hook.leftHook, Constants.Hook.rightHook);
   @SuppressWarnings("unused")
   private final IntakeSubsystem intake = new IntakeSubsystem(Constants.Intake.m_1ID, Constants.Intake.m_1Inverted,
       Constants.Intake.m_2ID, Constants.Intake.m_2Inverted);
@@ -39,7 +36,7 @@ public class RobotContainer {
   private final XboxController controller = new XboxController(0);
   // private final Joystick joystick = new Joystick(0);
 
-  private final DCMotor dcMotor = new DCMotor(Constants.DCMotor.motorID); // TODO: add actual ID (1)
+  private final ElevatorSystem elevator = new ElevatorSystem(Constants.Elevator.motorLeftID, Constants.Elevator.motorRightID);
 
   public RobotContainer() {
 
@@ -64,9 +61,9 @@ public class RobotContainer {
     // new POVButton(controller, 180).whileTrue(new HookDPAD(hook, false));
 
     // up, down, left -> forward, backward, stop
-    new POVButton(controller, 0).whileTrue(new InstantCommand(() -> dcMotor.setSpeed(Constants.DCMotor.motorSpeed)));
-    new POVButton(controller, 180).whileTrue(new InstantCommand(() -> dcMotor.setSpeed(-Constants.DCMotor.motorSpeed)));
-    new POVButton(controller, 270).onTrue(new InstantCommand(() -> dcMotor.stop()));
+    new POVButton(controller, 0).whileTrue(new InstantCommand(() -> elevator.setSpeed(Constants.Elevator.motorSpeed)));
+    new POVButton(controller, 180).whileTrue(new InstantCommand(() -> elevator.setSpeed(-Constants.Elevator.motorSpeed)));
+    new POVButton(controller, 270).onTrue(new InstantCommand(() -> elevator.stop()));
 
     new JoystickButton(controller, 5).whileTrue(new SwerveJoystickCmd(
         swerveSubsystem,
