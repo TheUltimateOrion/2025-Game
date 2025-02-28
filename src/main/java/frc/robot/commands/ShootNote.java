@@ -11,21 +11,22 @@ import frc.robot.Constants;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShootNote extends Command {
-  
+
   private final ShooterSubsystem shooter;
   private final Supplier<Double> power;
-  
+
   /** Creates a new ShootNote. */
   public ShootNote(ShooterSubsystem shooter, Supplier<Double> power) {
     this.shooter = shooter;
-    this.power=power;
+    this.power = power;
 
     addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
