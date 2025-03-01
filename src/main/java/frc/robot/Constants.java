@@ -219,21 +219,26 @@ public class Constants {
     public static class Elevator {
         public static final int motorLeftID = 1;
         public static final int motorRightID = 2;
+        public static final int motorGearRatio = 1 / 40;
 
-        public static final double motorSpeed = 2;
+        public static final double motorSpeed = 20 * Elevator.motorGearRatio;
     }
 
     public static class Keybindings {
-        public static final int leftBumper = XboxController.Button.kLeftBumper.value;
-        public static final int rightBumper = XboxController.Button.kRightBumper.value;
-        public static final int aButton = XboxController.Button.kA.value;
-        public static final int bButton = XboxController.Button.kB.value;
-        public static final int xButton = XboxController.Button.kX.value;
-        public static final int yButton = XboxController.Button.kY.value;
-        public static final int backButton = XboxController.Button.kBack.value;
-        public static final int startButton = XboxController.Button.kStart.value;
-        public static final int leftStickButton = XboxController.Button.kLeftStick.value;
-        public static final int rightStickButton = XboxController.Button.kRightStick.value;
+        public static final int BUMPER_LEFT = XboxController.Button.kLeftBumper.value;
+        public static final int BUMPER_RIGHT = XboxController.Button.kRightBumper.value;
+        public static final int BUTTON_A = XboxController.Button.kA.value;
+        public static final int BUTTON_B = XboxController.Button.kB.value;
+        public static final int BUTTON_X = XboxController.Button.kX.value;
+        public static final int BUTTON_Y = XboxController.Button.kY.value;
+        public static final int BUTTON_BACK = XboxController.Button.kBack.value;
+        public static final int BUTTON_START = XboxController.Button.kStart.value;
+        public static final int BUTTON_LEFT_STICK = XboxController.Button.kLeftStick.value;
+        public static final int BUTTON_RIGHT_STICK = XboxController.Button.kRightStick.value;
+        public static final int DPAD_UP = 0;
+        public static final int DPAD_DOWN = 180;
+        public static final int DPAD_LEFT = 270;
+        public static final int DPAD_RIGHT = 90;
     }
 
 }

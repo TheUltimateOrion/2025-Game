@@ -1,4 +1,4 @@
-  // Copyright (c) FIRST and other WPILib contributors.
+// Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
@@ -19,16 +19,15 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class SwerveJoystickAuto extends Command {
 
-
-
   private final SwerveSubsystem swerveSubsystem;
   private final Supplier<Double> xSpdFunction, ySpdFunction, xTurnFunction, yTurnFunction;
   private final SlewRateLimiter xSpdLimiter, ySpdLimiter, turnSpdLimiter;
   private final PIDController turningPID;
 
   /** Creates a new SwerveJoystickCmd. */
-  public SwerveJoystickAuto(SwerveSubsystem swerveSubsystem, 
-                           Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, Supplier<Double> xTurnFunction, Supplier<Double> yTurnFunction) {
+  public SwerveJoystickAuto(SwerveSubsystem swerveSubsystem,
+      Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, Supplier<Double> xTurnFunction,
+      Supplier<Double> yTurnFunction) {
 
     this.swerveSubsystem = swerveSubsystem;
     this.xSpdFunction = xSpdFunction;
@@ -36,23 +35,21 @@ public class SwerveJoystickAuto extends Command {
     this.xTurnFunction = xTurnFunction;
     this.yTurnFunction = yTurnFunction;
 
-    this.xSpdLimiter= new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUPS);
+    this.xSpdLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUPS);
     this.ySpdLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUPS);
     this.turnSpdLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAngularAccelerationUPS);
 
     turningPID = new PIDController(0.1, 0, 0);
     turningPID.enableContinuousInput(-180, 180);
-  
+
     addRequirements(swerveSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
-
-
-  
   @Override
   public void execute() {
 
@@ -65,36 +62,32 @@ public class SwerveJoystickAuto extends Command {
     double angle = Units.radiansToDegrees(Math.atan2(yTurn, xTurn));
     double turnSpd = turningPID.calculate(swerveSubsystem.getHeading(), angle);
 
-
-    //deadband
-    if (Math.abs(xSpd) <= Constants.DriveConstants.kJoystickDeadband){
-        xSpd = 0;
+    // deadband
+    if (Math.abs(xSpd) <= Constants.DriveConstants.kJoystickDeadband) {
+      xSpd = 0;
     }
-    if (Math.abs(ySpd) <= Constants.DriveConstants.kJoystickDeadband){
+    if (Math.abs(ySpd) <= Constants.DriveConstants.kJoystickDeadband) {
       ySpd = 0;
     }
-    if (Math.abs(xTurn) <= Constants.DriveConstants.kJoystickDeadband){
-      if (Math.abs(yTurn) <= Constants.DriveConstants.kJoystickDeadband){
+    if (Math.abs(xTurn) <= Constants.DriveConstants.kJoystickDeadband) {
+      if (Math.abs(yTurn) <= Constants.DriveConstants.kJoystickDeadband) {
         turnSpd = 0;
       }
     }
-    
 
     xSpd = xSpdLimiter.calculate(xSpd) * Constants.DriveConstants.kTeleDriveMaxSpeedMPS;
     ySpd = ySpdLimiter.calculate(ySpd) * Constants.DriveConstants.kTeleDriveMaxSpeedMPS;
     turnSpd = turnSpdLimiter.calculate(turnSpd) * Constants.DriveConstants.kTeleDriveMaxSpeedMPS;
 
-    //make Chassis speeds
+    // make Chassis speeds
     ChassisSpeeds chassisSpeeds;
     chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpd, ySpd, turnSpd, swerveSubsystem.getRotation2d());
-    
 
-    //convert chassis speeds to module states
+    // convert chassis speeds to module states
     SwerveModuleState[] moduleStates = RobotStructure.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
-    //output states to modules
+    // output states to modules
     swerveSubsystem.setModuleStates(moduleStates);
-
 
     // SwerveModuleState[] states = swerveSubsystem.getModuleStates();
     // SmartDashboard.putString("1", states[0].toString());

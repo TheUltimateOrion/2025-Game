@@ -25,7 +25,8 @@ public class HookDPAD extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -33,25 +34,24 @@ public class HookDPAD extends Command {
 
     double position = hook.getLeftPosition();
 
-    if (position <= Constants.Hook.max && up){
+    if (position <= Constants.Hook.max && up) {
       hook.setMotors(0);
       System.out.println("too High");
       return;
-    } 
-    if (position >= Constants.Hook.min && !up){
+    }
+    if (position >= Constants.Hook.min && !up) {
       System.out.println("too low");
       hook.setMotors(0);
       return;
     }
 
     double speed = 0;
-    if (up){
+    if (up) {
       speed = Constants.Hook.upSpeed;
-    } else{
+    } else {
       speed = Constants.Hook.downSpeed;
     }
     hook.setMotors(speed);
-
 
   }
 

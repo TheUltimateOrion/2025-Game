@@ -10,10 +10,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class HookSubsystem extends SubsystemBase {
-  
+
   private final TalonFX m_left;
   private final TalonFX m_right;
-  
+
   /** Creates a new Hook. */
   public HookSubsystem(int leftID, int rightID) {
 
@@ -24,18 +24,18 @@ public class HookSubsystem extends SubsystemBase {
 
   }
 
-  public void setMotors(double speed){
-    
+  public void setMotors(double speed) {
+
     m_left.set(speed);
     m_right.set(speed);
   }
 
-  public void resetEncoders(){
+  public void resetEncoders() {
     m_left.setPosition(0);
     m_right.setPosition(0);
   }
 
-  public double getLeftPosition(){
+  public double getLeftPosition() {
     return m_left.getRotorPosition().getValueAsDouble();
   }
 

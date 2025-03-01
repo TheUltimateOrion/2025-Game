@@ -32,21 +32,22 @@ public class AutoAim extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     PhotonPipelineResult result = photonVisionSubsystem.getResult();
-    if (!result.hasTargets()){
+    if (!result.hasTargets()) {
       return;
     }
     List<PhotonTrackedTarget> targets = result.getTargets();
     PhotonTrackedTarget target = result.getBestTarget();
-    
+
     int IDP = 0;
     int IDS = 0;
-    if (DriverStation.getAlliance().get().toString() == "Blue"){
+    if (DriverStation.getAlliance().get().toString() == "Blue") {
       IDP = Constants.Photon.blueIDP;
       IDS = Constants.Photon.blueIDS;
     } else {
@@ -54,20 +55,20 @@ public class AutoAim extends Command {
       IDS = Constants.Photon.redIDS;
     }
 
-    if (target.getFiducialId() != IDP){
+    if (target.getFiducialId() != IDP) {
       int index = searchTarget(targets, IDS);
-      if (index == -1){
+      if (index == -1) {
         return;
       }
-      
+
       target = targets.get(index);
     }
   }
 
-  private int searchTarget(List<PhotonTrackedTarget> targets,int ID){
-    for (int i = 0; i < targets.size(); i++){
+  private int searchTarget(List<PhotonTrackedTarget> targets, int ID) {
+    for (int i = 0; i < targets.size(); i++) {
       PhotonTrackedTarget target = targets.get(i);
-      if (target.getFiducialId() == ID){
+      if (target.getFiducialId() == ID) {
         return i;
       }
     }
@@ -76,7 +77,9 @@ public class AutoAim extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) { swerveSubsystem.stopModules();}
+  public void end(boolean interrupted) {
+    swerveSubsystem.stopModules();
+  }
 
   // Returns true when the command should end.
   @Override

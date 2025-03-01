@@ -12,8 +12,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ShooterSubsystem extends SubsystemBase {
-  
+
   private final TalonFX motor;
+
   /** Creates a new ShooterSubsystem. */
   @SuppressWarnings("removal")
   public ShooterSubsystem(int ID, boolean Inverted) {
@@ -22,24 +23,24 @@ public class ShooterSubsystem extends SubsystemBase {
     motor.setInverted(Inverted);
 
     // MotorOutputConfigs config = new MotorOutputConfigs();
-    // config.Inverted = Inverted ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive;
+    // config.Inverted = Inverted ? InvertedValue.CounterClockwise_Positive :
+    // InvertedValue.Clockwise_Positive;
 
     // motor.getConfigurator().apply(config);
 
   }
 
-  public void setMotors(double speed){
+  public void setMotors(double speed) {
     motor.set(speed);
-    
-  }
 
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if (motor.getVelocity().getValueAsDouble() > 0){
+    if (motor.getVelocity().getValueAsDouble() > 0) {
       SmartDashboard.putString("Shooter Status", "Running");
-    } else{
+    } else {
       SmartDashboard.putString("Shooter Status", "Idle");
     }
   }

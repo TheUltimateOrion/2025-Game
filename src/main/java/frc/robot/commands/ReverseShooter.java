@@ -10,6 +10,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class ReverseShooter extends Command {
 
   private final ShooterSubsystem shooter;
+
   /** Creates a new reverseShooter. */
   public ReverseShooter(ShooterSubsystem shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -20,7 +21,8 @@ public class ReverseShooter extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

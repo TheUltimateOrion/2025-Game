@@ -9,15 +9,15 @@ import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-
 public class PhotonVision extends SubsystemBase {
   private final PhotonCamera camera;
+
   /** Creates a new PhotonVision. */
   public PhotonVision(String cam) {
     this.camera = new PhotonCamera(cam);
   }
 
-  public PhotonPipelineResult getResult(){
+  public PhotonPipelineResult getResult() {
     return camera.getLatestResult();
   }
 

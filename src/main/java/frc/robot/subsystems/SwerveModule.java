@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-
-
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -42,32 +40,34 @@ public class SwerveModule extends SubsystemBase {
   private final CANcoder absoluteEncoder;
 
   private final DCMotorSim m_driveMotorSimModel = new DCMotorSim(
-    LinearSystemId.createDCMotorSystem(DCMotor.getFalcon500Foc(1), 0.001, Constants.SwerveModule.kDriveMotorGearRatio)
-    , DCMotor.getFalcon500Foc(1));
+      LinearSystemId.createDCMotorSystem(DCMotor.getFalcon500Foc(1), 0.001,
+          Constants.SwerveModule.kDriveMotorGearRatio),
+      DCMotor.getFalcon500Foc(1));
 
   private final DCMotorSim m_turnMotorSimModel = new DCMotorSim(
-      LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), 0.001, Constants.SwerveModule.kTurnMotorGearRatio)
-      , DCMotor.getKrakenX60Foc(1));
+      LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), 0.001, Constants.SwerveModule.kTurnMotorGearRatio),
+      DCMotor.getKrakenX60Foc(1));
 
   /** Creates a new SwerveModule. */
-  public SwerveModule(int driveMotorID, int turnMotorID, boolean driveMotorReversed, boolean turningMotorReversed, int absoluteEncoderID, double absoluteEncoderOff) {
+  public SwerveModule(int driveMotorID, int turnMotorID, boolean driveMotorReversed, boolean turningMotorReversed,
+      int absoluteEncoderID, double absoluteEncoderOff) {
     absoluteEncoder = new CANcoder(absoluteEncoderID, "rio");
     CANcoderConfiguration cc_cfg = new CANcoderConfiguration().withMagnetSensor(new MagnetSensorConfigs()
-      .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
-      .withMagnetOffset(absoluteEncoderOff)
-    );
+        .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
+        .withMagnetOffset(absoluteEncoderOff));
     absoluteEncoder.getConfigurator().apply(cc_cfg);
 
     driveMotor = new TalonFX(driveMotorID, "rio");
     turnMotor = new TalonFX(turnMotorID, "rio");
-    
-    driveMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(driveMotorReversed ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive));
-    turnMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(turningMotorReversed ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive));
+
+    driveMotor.getConfigurator().apply(new MotorOutputConfigs()
+        .withInverted(driveMotorReversed ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive));
+    turnMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(
+        turningMotorReversed ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive));
 
     TalonFXConfiguration fx_cfg = new TalonFXConfiguration().withFeedback(new FeedbackConfigs()
-      .withSensorToMechanismRatio(1.0)
-      .withRotorToSensorRatio(12.8)
-      );
+        .withSensorToMechanismRatio(1.0)
+        .withRotorToSensorRatio(12.8));
 
     turnMotor.getConfigurator().apply(fx_cfg);
 
@@ -76,47 +76,46 @@ public class SwerveModule extends SubsystemBase {
     resetEncoders();
   }
 
-  public double getDrivePosition(){
+  public double getDrivePosition() {
     return driveMotor.getRotorPosition().getValueAsDouble() * Constants.SwerveModule.kDriveEncoderRotation2Meter;
   }
 
-  public double getTurnPosition(){
+  public double getTurnPosition() {
     return turnMotor.getRotorPosition().getValueAsDouble() * Constants.SwerveModule.kTurnEncoderRotation2Rad;
 
   }
 
-  public double getDriveVelocity(){
+  public double getDriveVelocity() {
     return driveMotor.getRotorVelocity().getValueAsDouble() * Constants.SwerveModule.kDriveEncoderRPS2MPS;
   }
 
-  public double getTurnVelocity(){
+  public double getTurnVelocity() {
     return turnMotor.getRotorVelocity().getValueAsDouble() * Constants.SwerveModule.kTurnEncoderRPS2MPS;
 
   }
 
-  public double getAbsoluteEncoderRad(){
+  public double getAbsoluteEncoderRad() {
     double angle = absoluteEncoder.getAbsolutePosition().getValueAsDouble();
     angle *= 2 * Math.PI;
 
     return angle;
   }
 
-  public void resetEncoders(){
+  public void resetEncoders() {
     driveMotor.setPosition(0);
     turnMotor.setPosition(getAbsoluteEncoderRad() / Constants.SwerveModule.kTurnEncoderRotation2Rad);
   }
 
-
-  public SwerveModuleState getState(){
+  public SwerveModuleState getState() {
     return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurnPosition()));
   }
 
-  public void setDesiredState(SwerveModuleState state){
-    if (Math.abs(state.speedMetersPerSecond) < 0.001){
+  public void setDesiredState(SwerveModuleState state) {
+    if (Math.abs(state.speedMetersPerSecond) < 0.001) {
       stop();
       return;
     }
-    
+
     // state = SwerveModuleState.optimize(state, getState().angle);
     state.optimize(getState().angle);
     driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMPS);
@@ -128,31 +127,30 @@ public class SwerveModule extends SubsystemBase {
     turnMotor.set(turningPID.calculate(getTurnPosition(), state.angle.getRadians()));
   }
 
-  public void stop(){
+  public void stop() {
     driveMotor.set(0);
     turnMotor.set(0);
   }
 
-  private Rotation2d getAngle(){
+  private Rotation2d getAngle() {
     return Rotation2d.fromRadians(getTurnPosition());
   }
 
-  public SwerveModulePosition getPosition(){
+  public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(
-            getDrivePosition(), 
-            getAngle());
+        getDrivePosition(),
+        getAngle());
   }
 
   @Override
   public void simulationPeriodic() {
     TalonFXSimState driveMotorSim = driveMotor.getSimState();
     TalonFXSimState turnMotorSim = turnMotor.getSimState();
-    
-    
+
     driveMotorSim.setSupplyVoltage(RobotController.getBatteryVoltage());
     turnMotorSim.setSupplyVoltage(RobotController.getBatteryVoltage());
 
-   // get the motor voltage of the TalonFX
+    // get the motor voltage of the TalonFX
     var driveMotorVoltage = driveMotorSim.getMotorVoltageMeasure();
     var turnMotorVoltage = turnMotorSim.getMotorVoltageMeasure();
 
@@ -161,14 +159,16 @@ public class SwerveModule extends SubsystemBase {
     m_turnMotorSimModel.setInputVoltage(turnMotorVoltage.in(Volts));
     m_turnMotorSimModel.update(0.020); // assume 20 ms loop time
 
-
-   // apply the new rotor position and velocity to the TalonFX;
-   // note that this is rotor position/velocity (before gear ratio), but
-   // DCMotorSim returns mechanism position/velocity (after gear ratio)
-    driveMotorSim.setRawRotorPosition(Constants.SwerveModule.kDriveMotorGearRatio * m_driveMotorSimModel.getAngularPositionRotations());
-    driveMotorSim.setRotorVelocity(Constants.SwerveModule.kDriveMotorGearRatio * Units.radiansToRotations(m_driveMotorSimModel.getAngularVelocityRadPerSec()));
-    turnMotorSim.setRawRotorPosition(Constants.SwerveModule.kTurnMotorGearRatio * m_turnMotorSimModel.getAngularPositionRotations());
-    turnMotorSim.setRotorVelocity(Constants.SwerveModule.kTurnMotorGearRatio * Units.radiansToRotations(m_turnMotorSimModel.getAngularVelocityRadPerSec()));
+    // apply the new rotor position and velocity to the TalonFX;
+    // note that this is rotor position/velocity (before gear ratio), but
+    // DCMotorSim returns mechanism position/velocity (after gear ratio)
+    driveMotorSim.setRawRotorPosition(
+        Constants.SwerveModule.kDriveMotorGearRatio * m_driveMotorSimModel.getAngularPositionRotations());
+    driveMotorSim.setRotorVelocity(Constants.SwerveModule.kDriveMotorGearRatio
+        * Units.radiansToRotations(m_driveMotorSimModel.getAngularVelocityRadPerSec()));
+    turnMotorSim.setRawRotorPosition(
+        Constants.SwerveModule.kTurnMotorGearRatio * m_turnMotorSimModel.getAngularPositionRotations());
+    turnMotorSim.setRotorVelocity(Constants.SwerveModule.kTurnMotorGearRatio
+        * Units.radiansToRotations(m_turnMotorSimModel.getAngularVelocityRadPerSec()));
   }
 }
-
