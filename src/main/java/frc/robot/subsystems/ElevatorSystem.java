@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 // import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -10,13 +13,15 @@ public class ElevatorSystem extends SubsystemBase {
   private final TalonFX right;
   private static final double DEFAULT_SPEED = 0.25;
 
-  // TODO: update IDs
-  // private final DigitalInput toplimitSwitch = new DigitalInput(0);
-  // private final DigitalInput bottomlimitSwitch = new DigitalInput(1);
+  // // TODO: update IDs
+  // private final DigitalInput toplimitSwitch = new DigitalInput(5);
+  // private final DigitalInput bottomlimitSwitch = new DigitalInput(4);
 
   public ElevatorSystem(int leftID, int rightID) {
     left = new TalonFX(leftID);
     right = new TalonFX(rightID);
+
+    left.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
   }
 
   public void setSpeed(double speed) {

@@ -31,15 +31,14 @@ public class ShootNote extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    shooter.setMotors(Constants.Shooter.launchSpeed * power.get());
+    shooter.toggleMotors(Constants.Shooter.LAUNCH_SPEED * power.get());
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.setMotors(0);
+    shooter.stopMotors();
   }
 
   // Returns true when the command should end.

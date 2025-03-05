@@ -35,9 +35,9 @@ public class SwerveJoystickAuto extends Command {
     this.xTurnFunction = xTurnFunction;
     this.yTurnFunction = yTurnFunction;
 
-    this.xSpdLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUPS);
-    this.ySpdLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUPS);
-    this.turnSpdLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAngularAccelerationUPS);
+    this.xSpdLimiter = new SlewRateLimiter(Constants.DriveConstants.TELE_DRIVE_MAX_ACCELERATION_UPS);
+    this.ySpdLimiter = new SlewRateLimiter(Constants.DriveConstants.TELE_DRIVE_MAX_ACCELERATION_UPS);
+    this.turnSpdLimiter = new SlewRateLimiter(Constants.DriveConstants.TELE_DRIVE_MAX_ANGULAR_ACCELERATION_UPS);
 
     turningPID = new PIDController(0.1, 0, 0);
     turningPID.enableContinuousInput(-180, 180);
@@ -63,28 +63,28 @@ public class SwerveJoystickAuto extends Command {
     double turnSpd = turningPID.calculate(swerveSubsystem.getHeading(), angle);
 
     // deadband
-    if (Math.abs(xSpd) <= Constants.DriveConstants.kJoystickDeadband) {
+    if (Math.abs(xSpd) <= Constants.DriveConstants.JOYSTICK_DEADBAND) {
       xSpd = 0;
     }
-    if (Math.abs(ySpd) <= Constants.DriveConstants.kJoystickDeadband) {
+    if (Math.abs(ySpd) <= Constants.DriveConstants.JOYSTICK_DEADBAND) {
       ySpd = 0;
     }
-    if (Math.abs(xTurn) <= Constants.DriveConstants.kJoystickDeadband) {
-      if (Math.abs(yTurn) <= Constants.DriveConstants.kJoystickDeadband) {
+    if (Math.abs(xTurn) <= Constants.DriveConstants.JOYSTICK_DEADBAND) {
+      if (Math.abs(yTurn) <= Constants.DriveConstants.JOYSTICK_DEADBAND) {
         turnSpd = 0;
       }
     }
 
-    xSpd = xSpdLimiter.calculate(xSpd) * Constants.DriveConstants.kTeleDriveMaxSpeedMPS;
-    ySpd = ySpdLimiter.calculate(ySpd) * Constants.DriveConstants.kTeleDriveMaxSpeedMPS;
-    turnSpd = turnSpdLimiter.calculate(turnSpd) * Constants.DriveConstants.kTeleDriveMaxSpeedMPS;
+    xSpd = xSpdLimiter.calculate(xSpd) * Constants.DriveConstants.TELE_DRIVE_MAX_SPEED_MPS;
+    ySpd = ySpdLimiter.calculate(ySpd) * Constants.DriveConstants.TELE_DRIVE_MAX_SPEED_MPS;
+    turnSpd = turnSpdLimiter.calculate(turnSpd) * Constants.DriveConstants.TELE_DRIVE_MAX_ANGULAR_SPEED_RPS;
 
     // make Chassis speeds
     ChassisSpeeds chassisSpeeds;
     chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpd, ySpd, turnSpd, swerveSubsystem.getRotation2d());
 
     // convert chassis speeds to module states
-    SwerveModuleState[] moduleStates = RobotStructure.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+    SwerveModuleState[] moduleStates = RobotStructure.DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
 
     // output states to modules
     swerveSubsystem.setModuleStates(moduleStates);

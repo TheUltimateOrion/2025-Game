@@ -34,40 +34,40 @@ public class SwerveSubsystem extends SubsystemBase {
   private Field2d field = new Field2d();
 
   private final SwerveModule frontLeft = new SwerveModule(
-      Constants.FrontLeft.kDriveMotorID,
-      Constants.FrontLeft.kTurnMotorID,
-      Constants.FrontLeft.kDriveMotorReversed,
-      Constants.FrontLeft.kTurningMotorReversed,
-      Constants.FrontLeft.kAbsoluteEncoderID,
-      Constants.FrontLeft.kFrontLeftEncoderOffset);
+      Constants.FrontLeft.DRIVE_MOTOR_ID,
+      Constants.FrontLeft.TURN_MOTOR_ID,
+      Constants.FrontLeft.DRIVE_MOTOR_REVERSED,
+      Constants.FrontLeft.TURNING_MOTOR_REVERSED,
+      Constants.FrontLeft.ABSOLUTE_ENCODER_ID,
+      Constants.FrontLeft.ENCODER_OFFSET);
 
   private final SwerveModule frontRight = new SwerveModule(
-      Constants.FrontRight.kDriveMotorID,
-      Constants.FrontRight.kTurnMotorID,
-      Constants.FrontRight.kDriveMotorReversed,
-      Constants.FrontRight.kTurningMotorReversed,
-      Constants.FrontRight.kAbsoluteEncoderID,
-      Constants.FrontRight.kFrontRightEncoderOffset);
+      Constants.FrontRight.DRIVE_MOTOR_ID,
+      Constants.FrontRight.TURN_MOTOR_ID,
+      Constants.FrontRight.DRIVE_MOTOR_REVERSED,
+      Constants.FrontRight.TURNING_MOTOR_REVERSED,
+      Constants.FrontRight.ABSOLUTE_ENCODER_ID,
+      Constants.FrontRight.ENCODER_OFFSET);
 
   private final SwerveModule backLeft = new SwerveModule(
-      Constants.BackLeft.kDriveMotorID,
-      Constants.BackLeft.kTurnMotorID,
-      Constants.BackLeft.kDriveMotorReversed,
-      Constants.BackLeft.kTurningMotorReversed,
-      Constants.BackLeft.kAbsoluteEncoderID,
-      Constants.BackLeft.kBackLeftEncoderOffset);
+      Constants.BackLeft.DRIVE_MOTOR_ID,
+      Constants.BackLeft.TURN_MOTOR_ID,
+      Constants.BackLeft.DRIVE_MOTOR_REVERSED,
+      Constants.BackLeft.TURNING_MOTOR_REVERSED,
+      Constants.BackLeft.ABSOLUTE_ENCODER_ID,
+      Constants.BackLeft.ENCODER_OFFSET);
 
   private final SwerveModule backRight = new SwerveModule(
-      Constants.BackRight.kDriveMotorID,
-      Constants.BackRight.kTurnMotorID,
-      Constants.BackRight.kDriveMotorReversed,
-      Constants.BackRight.kTurningMotorReversed,
-      Constants.BackRight.kAbsoluteEncoderID,
-      Constants.BackRight.kBackRightEncoderOffset);
+      Constants.BackRight.DRIVE_MOTOR_ID,
+      Constants.BackRight.TURN_MOTOR_ID,
+      Constants.BackRight.DRIVE_MOTOR_REVERSED,
+      Constants.BackRight.TURNING_MOTOR_REVERSED,
+      Constants.BackRight.ABSOLUTE_ENCODER_ID,
+      Constants.BackRight.ENCODER_OFFSET);
 
   // private final AHRS gyro = new AHRS(SPI.Port.kMXP);
   private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
-  private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.RobotStructure.kDriveKinematics,
+  private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.RobotStructure.DRIVE_KINEMATICS,
       new Rotation2d(0),
       getPositions());
 
@@ -170,12 +170,12 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public ChassisSpeeds getCurrentSpeeds() {
-    return Constants.RobotStructure.kDriveKinematics.toChassisSpeeds(frontLeft.getState(), frontRight.getState(),
+    return Constants.RobotStructure.DRIVE_KINEMATICS.toChassisSpeeds(frontLeft.getState(), frontRight.getState(),
         backLeft.getState(), backRight.getState());
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
-    setModuleStates(Constants.RobotStructure.kDriveKinematics.toSwerveModuleStates(chassisSpeeds));
+    setModuleStates(Constants.RobotStructure.DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds));
   }
 
   public SwerveModulePosition[] getPositions() {
@@ -209,7 +209,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.DriveConstants.kPhysicalMaxSpeedMPS);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.DriveConstants.PHYSICAL_MAX_SPEED_MPS);
     frontLeft.setDesiredState(desiredStates[2]);
     frontRight.setDesiredState(desiredStates[3]);
     backLeft.setDesiredState(desiredStates[0]);

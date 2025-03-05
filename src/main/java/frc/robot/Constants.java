@@ -1,227 +1,119 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
-// import java.util.List;
-// import java.util.Optional;
-
-// import org.photonvision.EstimatedRobotPose;
-// import org.photonvision.PhotonCamera;
-// import org.photonvision.PhotonPoseEstimator;
-// import org.photonvision.PhotonUtils;
-// import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-// import org.photonvision.targeting.PhotonPipelineResult;
-// import org.photonvision.targeting.PhotonTrackedTarget;
-
-// import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-// import com.pathplanner.lib.util.PIDConstants;
-// import com.pathplanner.lib.util.ReplanningConfig;
-
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
-// import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.XboxController;
 
-/** Add your docs here. */
 public class Constants {
 
     public static class SwerveModule {
-        public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
-
-        public static final double kDriveMotorGearRatio = 1 / 6.746031746031747;
-        public static final double kDriveEncoderRotation2Meter = (kDriveMotorGearRatio * kWheelDiameterMeters
+        public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
+        public static final double DRIVE_MOTOR_GEAR_RATIO = 1 / 6.746031746031747;
+        public static final double DRIVE_ENCODER_ROTATION_2_METER = (DRIVE_MOTOR_GEAR_RATIO * WHEEL_DIAMETER_METERS
                 * Math.PI);
-        public static final double kDriveEncoderRPS2MPS = kDriveEncoderRotation2Meter;
-
-        public static final double kTurnMotorGearRatio = 1 / 12.8;
-        public static final double kTurnEncoderRotation2Rad = (kTurnMotorGearRatio * 2 * Math.PI);
-        public static final double kTurnEncoderRPS2MPS = kTurnEncoderRotation2Rad;
-
-        public static final double kPturn = 0.118;
-        public static final double kDturn = 0;
+        public static final double DRIVE_ENCODER_RPS_2_MPS = DRIVE_ENCODER_ROTATION_2_METER;
+        public static final double TURN_MOTOR_GEAR_RATIO = 1 / 12.8;
+        public static final double TURN_ENCODER_ROTATION_2_RAD = (TURN_MOTOR_GEAR_RATIO * 2 * Math.PI);
+        public static final double TURN_ENCODER_RPS_2_MPS = TURN_ENCODER_ROTATION_2_RAD;
+        public static final double P_TURN = 0.118;
+        public static final double D_TURN = 0;
     }
 
     public static class DriveConstants {
-        public static final double kPhysicalMaxSpeedMPS = 18 * 2;
-        public static final double kPhysicalMaxAngularSpeedRPM = 1.5 * Math.PI;
-
-        public static final double kTeleDriveMaxAccelerationUPS = 5;
-        public static final double kTeleDriveMaxAngularAccelerationUPS = 1.5 * Math.PI;
-
-        public static final double kTeleDriveMaxSpeedMPS = kPhysicalMaxSpeedMPS / 2;
-        public static final double kTeleDriveMaxAngularSpeedRPS = kPhysicalMaxAngularSpeedRPM / 2;
-
-        public static final int kXAxis = 0;
-        public static final int kYAxis = 1;
-        public static final int kTurnAxis = 4;
-        public static final int kFieldOrientedButton = 0;
-
-        public static final double kJoystickDeadband = 0.05;
+        public static final double PHYSICAL_MAX_SPEED_MPS = 18 * 2;
+        public static final double PHYSICAL_MAX_ANGULAR_SPEED_RPM = 1.5 * Math.PI;
+        public static final double TELE_DRIVE_MAX_ACCELERATION_UPS = 5;
+        public static final double TELE_DRIVE_MAX_ANGULAR_ACCELERATION_UPS = 1.5 * Math.PI;
+        public static final double TELE_DRIVE_MAX_SPEED_MPS = PHYSICAL_MAX_SPEED_MPS / 2;
+        public static final double TELE_DRIVE_MAX_ANGULAR_SPEED_RPS = PHYSICAL_MAX_ANGULAR_SPEED_RPM / 2;
+        public static final int X_AXIS = 0;
+        public static final int Y_AXIS = 1;
+        public static final int TURN_AXIS = 4;
+        public static final int FIELD_ORIENTED_BUTTON = 0;
+        public static final double JOYSTICK_DEADBAND = 0.05;
     }
 
     public static class RobotStructure {
-
-        public static final double kTrackWidth = Units.inchesToMeters(24.75);
-        public static final double kWheelBase = Units.inchesToMeters(19);
-
-        public static final Translation2d frontLeftLocation = new Translation2d(kWheelBase / 2, -kTrackWidth / 2);
-        public static final Translation2d frontRightLocation = new Translation2d(kWheelBase / 2, kTrackWidth / 2);
-        public static final Translation2d BackLeftLocation = new Translation2d(-kWheelBase / 2, -kTrackWidth / 2);
-        public static final Translation2d BackRightLocation = new Translation2d(-kWheelBase / 2, kTrackWidth / 2);
-        public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-                frontLeftLocation,
-                frontRightLocation,
-                BackLeftLocation,
-                BackRightLocation);
-
+        public static final double TRACK_WIDTH = Units.inchesToMeters(24.75);
+        public static final double WHEEL_BASE = Units.inchesToMeters(19);
+        public static final Translation2d FRONT_LEFT_LOCATION = new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2);
+        public static final Translation2d FRONT_RIGHT_LOCATION = new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2);
+        public static final Translation2d BACK_LEFT_LOCATION = new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2);
+        public static final Translation2d BACK_RIGHT_LOCATION = new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2);
+        public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
+                FRONT_LEFT_LOCATION,
+                FRONT_RIGHT_LOCATION,
+                BACK_LEFT_LOCATION,
+                BACK_RIGHT_LOCATION);
     }
 
     public static class FrontLeft {
-
-        public static final int kDriveMotorID = 11;
-        public static final int kTurnMotorID = 12;
-        public static final boolean kDriveMotorReversed = false;
-        public static final boolean kTurningMotorReversed = true;
-        public static final int kAbsoluteEncoderID = 1;
-        public static final double kFrontLeftEncoderOffset = 0.227783203125;
+        public static final int DRIVE_MOTOR_ID = 11;
+        public static final int TURN_MOTOR_ID = 12;
+        public static final boolean DRIVE_MOTOR_REVERSED = false;
+        public static final boolean TURNING_MOTOR_REVERSED = true;
+        public static final int ABSOLUTE_ENCODER_ID = 1;
+        public static final double ENCODER_OFFSET = 0.227783203125;
     }
 
     public static class FrontRight {
-
-        public static final int kDriveMotorID = 41;
-        public static final int kTurnMotorID = 42;
-        public static final boolean kDriveMotorReversed = true;
-        public static final boolean kTurningMotorReversed = true;
-        public static final int kAbsoluteEncoderID = 4;
-        public static final double kFrontRightEncoderOffset = 0.248291015625;
+        public static final int DRIVE_MOTOR_ID = 41;
+        public static final int TURN_MOTOR_ID = 42;
+        public static final boolean DRIVE_MOTOR_REVERSED = true;
+        public static final boolean TURNING_MOTOR_REVERSED = true;
+        public static final int ABSOLUTE_ENCODER_ID = 4;
+        public static final double ENCODER_OFFSET = 0.248291015625;
     }
 
     public static class BackLeft {
-
-        public static final int kDriveMotorID = 21;
-        public static final int kTurnMotorID = 22;
-        public static final boolean kDriveMotorReversed = false;
-        public static final boolean kTurningMotorReversed = true;
-        public static final int kAbsoluteEncoderID = 2;
-        public static final double kBackLeftEncoderOffset = -0.29052734375;
-
+        public static final int DRIVE_MOTOR_ID = 21;
+        public static final int TURN_MOTOR_ID = 22;
+        public static final boolean DRIVE_MOTOR_REVERSED = false;
+        public static final boolean TURNING_MOTOR_REVERSED = true;
+        public static final int ABSOLUTE_ENCODER_ID = 2;
+        public static final double ENCODER_OFFSET = -0.29052734375;
     }
 
     public static class BackRight {
-
-        public static final int kDriveMotorID = 31;
-        public static final int kTurnMotorID = 32;
-        public static final boolean kDriveMotorReversed = false;
-        public static final boolean kTurningMotorReversed = true;
-        public static final int kAbsoluteEncoderID = 3;
-        public static final double kBackRightEncoderOffset = 0.188232421875;
+        public static final int DRIVE_MOTOR_ID = 31;
+        public static final int TURN_MOTOR_ID = 32;
+        public static final boolean DRIVE_MOTOR_REVERSED = false;
+        public static final boolean TURNING_MOTOR_REVERSED = true;
+        public static final int ABSOLUTE_ENCODER_ID = 3;
+        public static final double ENCODER_OFFSET = 0.188232421875;
     }
 
     public static class Hook {
-        // put motor id in lefthook
-        public static final int leftHook = 61;
-        public static final int rightHook = 62;
-        public static final double upSpeed = -0.17;
-        public static final double downSpeed = 0.5;
-        public static final double min = 0.001;
-        public static final double max = -4.26;
-    }
-
-    public static class Intake {
-        public static final int m_1ID = 51;
-        public static final int m_2ID = 52;
-        public static final boolean m_1Inverted = true;
-        public static final boolean m_2Inverted = true;
-        public static final double speed = 0.05;
+        public static final int LEFT_HOOK = 61;
+        public static final int RIGHT_HOOK = 62;
+        public static final double UP_SPEED = -0.17;
+        public static final double DOWN_SPEED = 0.5;
+        public static final double MIN = 0.001;
+        public static final double MAX = -4.26;
     }
 
     public static class Shooter {
-        public static final int mID = 8;
-        public static final boolean mInverted = false;
-        public static final double launchSpeed = 0.69420;
+        public static final int M_ID_LEFT = 8;
+        public static final int M_ID_RIGHT = 9;
+        public static final double LAUNCH_SPEED = 0.4;
     }
 
     public static class PathPlannerConstants {
-        // public static final HolonomicPathFollowerConfig kHolonomicPathFollowerConfig
+        // public static final HolonomicPathFollowerConfig
+        // HOLONOMIC_PATH_FOLLOWER_CONFIG
         // = new HolonomicPathFollowerConfig(
         // new PIDConstants(5,0,0),
         // new PIDConstants(5,0,0),
-        // DriveConstants.kPhysicalMaxSpeedMPS,
+        // DriveConstants.PHYSICAL_MAX_SPEED_MPS,
         // 0, //max distance to wheel
         // new ReplanningConfig());
     }
 
-    public static class Photon {
-        public static final int blueIDP = 7;
-        public static final int blueIDS = 8;
-
-        public static final int redIDS = 3;
-        public static final int redIDP = 4;
-
-        // AprilTagFieldLayout aprilTagFieldLayout =
-        // AprilTagFields.kDefaultField.loadAprilTagLayoutField();
-        AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
-
-        Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5),
-                new Rotation3d(0, 0, 0)); // Cam mounted facing forward, half a meter forward of center, half a meter up
-                                          // from center.
-
-        /*
-         * 
-         * PhotonTrackedTarget target = result.getBestTarget();
-         * 
-         * Transform3d pose = target.getBestCameraToTarget();
-         * List<org.photonvision.targeting.TargetCorner> corners =
-         * target.getDetectedCorners();
-         * 
-         * 
-         * int targetID = target.getFiducialId();
-         * double poseAmbiguity = target.getPoseAmbiguity();
-         * 
-         * Transform3d bestCameraToTarget = target.getBestCameraToTarget();
-         * Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
-         * 
-         * Pose3d robotPose =
-         * PhotonUtils.estimateFieldToRobotAprilTag(target.getBestCameraToTarget(),
-         * aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(),
-         * new Transform3d(new Translation3d(0, 0.0, 0), new Rotation3d(0,0,0)));
-         * 
-         * PhotonPoseEstimator photonPoseEstimator = new
-         * PhotonPoseEstimator(aprilTagFieldLayout,
-         * PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, robotToCam);
-         * 
-         * public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose3d
-         * prevEstimatedRobotPose) {
-         * 
-         * photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
-         * 
-         * return photonPoseEstimator.update();
-         * }
-         * 
-         * public void Snapshot () {
-         * // Capture pre-process camera stream image
-         * camera.takeInputSnapshot();
-         * // Capture post-process camera stream image
-         * camera.takeOutputSnapshot();
-         * 
-         * }
-         */
-    }
-
     public static class Elevator {
-        public static final int motorLeftID = 1;
-        public static final int motorRightID = 2;
-        public static final int motorGearRatio = 1 / 40;
-
-        public static final double motorSpeed = 20 * Elevator.motorGearRatio;
+        public static final int M_ID_LEFT = 1;
+        public static final int M_ID_RIGHT = 2;
+        public static final double MOTOR_SPEED = -0.4; // negative to reverse controls
     }
 
     public static class Keybindings {
@@ -240,5 +132,4 @@ public class Constants {
         public static final int DPAD_LEFT = 270;
         public static final int DPAD_RIGHT = 90;
     }
-
 }

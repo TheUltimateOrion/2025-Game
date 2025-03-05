@@ -29,9 +29,9 @@ public class SwerveJoystickCmd extends Command {
     this.ySpdFunction = ySpdFunction;
     this.turnSpdFunction = turnSpdFunction;
 
-    this.xSpdLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUPS);
-    this.ySpdLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUPS);
-    this.turnSpdLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAngularAccelerationUPS);
+    this.xSpdLimiter = new SlewRateLimiter(Constants.DriveConstants.TELE_DRIVE_MAX_ACCELERATION_UPS);
+    this.ySpdLimiter = new SlewRateLimiter(Constants.DriveConstants.TELE_DRIVE_MAX_ACCELERATION_UPS);
+    this.turnSpdLimiter = new SlewRateLimiter(Constants.DriveConstants.TELE_DRIVE_MAX_ANGULAR_ACCELERATION_UPS);
     addRequirements(swerveSubsystem);
   }
 
@@ -51,22 +51,22 @@ public class SwerveJoystickCmd extends Command {
     double turnSpd = turnSpdFunction.get();
 
     // deadband
-    if (Math.abs(xSpd) <= Constants.DriveConstants.kJoystickDeadband) {
+    if (Math.abs(xSpd) <= Constants.DriveConstants.JOYSTICK_DEADBAND) {
       xSpd = 0;
     }
-    if (Math.abs(ySpd) <= Constants.DriveConstants.kJoystickDeadband) {
+    if (Math.abs(ySpd) <= Constants.DriveConstants.JOYSTICK_DEADBAND) {
       ySpd = 0;
     }
-    if (Math.abs(turnSpd) <= Constants.DriveConstants.kJoystickDeadband) {
+    if (Math.abs(turnSpd) <= Constants.DriveConstants.JOYSTICK_DEADBAND) {
       turnSpd = 0;
     }
     // SmartDashboard.putNumber("turn speed", turnSpd);
     // SmartDashboard.putNumber("x speed", xSpd);
 
     // SmartDashboard.putNumber("y speed", ySpd);
-    xSpd = xSpdLimiter.calculate(xSpd) * Constants.DriveConstants.kTeleDriveMaxSpeedMPS * 0.01;
-    ySpd = ySpdLimiter.calculate(ySpd) * Constants.DriveConstants.kTeleDriveMaxSpeedMPS * 0.01;
-    turnSpd = turnSpdLimiter.calculate(turnSpd) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRPS * 0.05;
+    xSpd = xSpdLimiter.calculate(xSpd) * Constants.DriveConstants.TELE_DRIVE_MAX_SPEED_MPS * 0.01;
+    ySpd = ySpdLimiter.calculate(ySpd) * Constants.DriveConstants.TELE_DRIVE_MAX_SPEED_MPS * 0.01;
+    turnSpd = turnSpdLimiter.calculate(turnSpd) * Constants.DriveConstants.TELE_DRIVE_MAX_ANGULAR_SPEED_RPS * 0.05;
     turnSpd = Math.min(Math.PI / 32, Math.max(turnSpd, -Math.PI / 32));
 
     // make Chassis speeds

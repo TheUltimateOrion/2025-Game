@@ -16,83 +16,64 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.Elevator;
 import frc.robot.Constants.Keybindings;
 import frc.robot.Constants.Shooter;
-import frc.robot.commands.AutoAim;
 import frc.robot.commands.ShootNote;
 import frc.robot.commands.SwerveJoystickAuto;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.subsystems.ElevatorSystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.PhotonVision;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
-  // subsystems
-  private final ElevatorSystem elevator = new ElevatorSystem(Elevator.motorLeftID,
-      Elevator.motorRightID);
-  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem(0, 1);
-  private final PhotonVision photonVision = new PhotonVision("1");
-  private final ShooterSubsystem shooter = new ShooterSubsystem(Shooter.mID, Shooter.mInverted);
-  private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-  // private final HookSubsystem hook = new HookSubsystem(Constants.Hook.leftHook,
-  // Constants.Hook.rightHook);
+    // subsystems
+    private final ElevatorSystem elevator = new ElevatorSystem(Elevator.M_ID_LEFT, Elevator.M_ID_RIGHT);
+    private final ShooterSubsystem shooter = new ShooterSubsystem(Shooter.M_ID_LEFT, Shooter.M_ID_RIGHT);
+    private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
-  // controllers
-  private final XboxController controller = new XboxController(0);
+    // controllers
+    private final XboxController controller = new XboxController(0);
 
-  // commands
-  public RobotContainer() {
-    // create named commands for pathplanner here
-    NamedCommands.registerCommand("Drop", new ShootNote(shooter, () -> 0.1));
+    // commands
+    public RobotContainer() {
+        // create named commands for pathplanner here
+        NamedCommands.registerCommand("Drop", new ShootNote(shooter, () -> 0.1));
 
-    swerveSubsystem.setDefaultCommand(new SwerveJoystickAuto(
-        swerveSubsystem,
-        () -> controller.getLeftY(),
-        () -> controller.getLeftX(),
-        () -> -controller.getRightY(),
-        () -> -controller.getRightX()));
+        swerveSubsystem.setDefaultCommand(new SwerveJoystickAuto(
+                swerveSubsystem,
+                () -> controller.getLeftY(),
+                () -> controller.getLeftX(),
+                () -> -controller.getRightY(),
+                () -> -controller.getRightX()));
 
-    shooter.setDefaultCommand(new ShootNote(shooter, () -> controller.getRightTriggerAxis()));
+        shooter.setDefaultCommand(new ShootNote(shooter, () -> controller.getRightTriggerAxis()));
 
-    configureBindings();
-  }
+        configureBindings();
+    }
 
-  // keybindings
-  private void configureBindings() {
-    // toggle intake motors
-    new JoystickButton(controller, Keybindings.BUTTON_A)
-        .onTrue(new InstantCommand(() -> intakeSubsystem.toggleMotors(0.5)));
+    // keybindings
+    private void configureBindings() {
 
-    // auto aim
-    new JoystickButton(controller, Keybindings.BUTTON_X)
-        .whileTrue(new AutoAim(swerveSubsystem, photonVision));
+        // zero heading
+        new JoystickButton(controller, Keybindings.BUTTON_Y)
+                .onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
 
-    // zero heading
-    new JoystickButton(controller, Keybindings.BUTTON_Y)
-        .onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
+        // configure DPAD
+        // elevator forward, backward -> start and stop
+        new POVButton(controller, Keybindings.DPAD_UP)
+                .whileTrue(new InstantCommand(() -> elevator.setSpeed(Constants.Elevator.MOTOR_SPEED)))
+                .whileFalse(new InstantCommand(() -> elevator.stop()));
+        new POVButton(controller, Keybindings.DPAD_DOWN)
+                .whileTrue(new InstantCommand(() -> elevator.setSpeed(-Constants.Elevator.MOTOR_SPEED)))
+                .whileFalse(new InstantCommand(() -> elevator.stop()));
 
-    // elevator forward, backward -> start and stop
-    new POVButton(controller, Keybindings.DPAD_UP)
-        .onTrue(new InstantCommand(() -> elevator.setSpeed(Elevator.motorSpeed)));
-    new POVButton(controller, Keybindings.DPAD_DOWN)
-        .onTrue(new InstantCommand(() -> elevator.setSpeed(-Elevator.motorSpeed)));
+        // left bumper -> swerve joystick
+        new JoystickButton(controller, Keybindings.BUMPER_LEFT).whileTrue(new SwerveJoystickCmd(
+                swerveSubsystem,
+                () -> controller.getLeftY(),
+                () -> -controller.getLeftX(),
+                () -> -controller.getRightX()));
+    }
 
-    new POVButton(controller, Keybindings.DPAD_UP)
-        .onFalse(new InstantCommand(() -> elevator.stop()));
-    new POVButton(controller, Keybindings.DPAD_DOWN)
-        .onFalse(new InstantCommand(() -> elevator.stop()));
-    // new POVButton(controller, Keybindings.DPAD_LEFT).onTrue(new InstantCommand(()
-    // -> elevator.stop()));
-
-    // left bumper -> swerve joystick
-    new JoystickButton(controller, Keybindings.BUMPER_LEFT).whileTrue(new SwerveJoystickCmd(
-        swerveSubsystem,
-        () -> controller.getLeftY(),
-        () -> -controller.getLeftX(),
-        () -> -controller.getRightX()));
-  }
-
-  public Command getAutonomousCommand() {
-    return new PathPlannerAuto("Drop It");
-  }
+    public Command getAutonomousCommand() {
+        return new PathPlannerAuto("Drop It");
+    }
 }
