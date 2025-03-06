@@ -7,9 +7,11 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
@@ -32,6 +34,11 @@ public class RobotContainer {
     // controllers
     private final XboxController controller = new XboxController(0);
 
+    // motors
+    // TODO: channel
+    private final Servo servo = new Servo(0);
+    private boolean servoState = false;
+
     // commands
     public RobotContainer() {
         // create named commands for pathplanner here
@@ -52,6 +59,11 @@ public class RobotContainer {
     // keybindings
     private void configureBindings() {
 
+        new JoystickButton(controller, Keybindings.BUTTON_A).onTrue(new InstantCommand(() -> {
+            servoState = !servoState;
+            servo.setAngle(servoState ? 270 : -270);
+        }));
+
         // zero heading
         new JoystickButton(controller, Keybindings.BUTTON_Y)
                 .onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
@@ -59,11 +71,13 @@ public class RobotContainer {
         // configure DPAD
         // elevator forward, backward -> start and stop
         new POVButton(controller, Keybindings.DPAD_UP)
-                .whileTrue(new InstantCommand(() -> elevator.setSpeed(Constants.Elevator.MOTOR_SPEED)))
-                .whileFalse(new InstantCommand(() -> elevator.stop()));
+                .whileTrue(
+                        new RepeatCommand(new InstantCommand(() -> elevator.setSpeed(Constants.Elevator.MOTOR_SPEED))))
+                .onFalse(new InstantCommand(() -> elevator.lock()));
         new POVButton(controller, Keybindings.DPAD_DOWN)
-                .whileTrue(new InstantCommand(() -> elevator.setSpeed(-Constants.Elevator.MOTOR_SPEED)))
-                .whileFalse(new InstantCommand(() -> elevator.stop()));
+                .whileTrue(
+                        new RepeatCommand(new InstantCommand(() -> elevator.setSpeed(-Constants.Elevator.MOTOR_SPEED))))
+                .onFalse(new InstantCommand(() -> elevator.lock()));
 
         // left bumper -> swerve joystick
         new JoystickButton(controller, Keybindings.BUMPER_LEFT).whileTrue(new SwerveJoystickCmd(

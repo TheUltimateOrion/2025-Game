@@ -113,7 +113,8 @@ public class Constants {
     public static class Elevator {
         public static final int M_ID_LEFT = 1;
         public static final int M_ID_RIGHT = 2;
-        public static final double MOTOR_SPEED = -0.4; // negative to reverse controls
+        public static final double MOTOR_SPEED = -0.4;
+        public static final double ANTI_GRAVITY = -0.01;
     }
 
     public static class Keybindings {

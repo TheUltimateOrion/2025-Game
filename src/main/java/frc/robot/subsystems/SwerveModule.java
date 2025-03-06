@@ -41,12 +41,12 @@ public class SwerveModule extends SubsystemBase {
 
   private final DCMotorSim m_driveMotorSimModel = new DCMotorSim(
       LinearSystemId.createDCMotorSystem(DCMotor.getFalcon500Foc(1), 0.001,
-          Constants.SwerveModule.DRIVE_MOTOR_GEAR_RATIO),
+          Math.pow(Constants.SwerveModule.DRIVE_MOTOR_GEAR_RATIO, -1)),
       DCMotor.getFalcon500Foc(1));
 
   private final DCMotorSim m_turnMotorSimModel = new DCMotorSim(
       LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), 0.001,
-          Constants.SwerveModule.TURN_MOTOR_GEAR_RATIO),
+          Math.pow(Constants.SwerveModule.TURN_MOTOR_GEAR_RATIO, -1)),
       DCMotor.getKrakenX60Foc(1));
 
   /** Creates a new SwerveModule. */
