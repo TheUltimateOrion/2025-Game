@@ -21,7 +21,7 @@ public class Constants {
     }
 
     public static class DriveConstants {
-        public static final double PHYSICAL_MAX_SPEED_MPS = 18 * 2;
+        public static final double PHYSICAL_MAX_SPEED_MPS = 2;
         public static final double PHYSICAL_MAX_ANGULAR_SPEED_RPM = 1.5 * Math.PI;
         public static final double TELE_DRIVE_MAX_ACCELERATION_UPS = 5;
         public static final double TELE_DRIVE_MAX_ANGULAR_ACCELERATION_UPS = 1.5 * Math.PI;
@@ -31,7 +31,7 @@ public class Constants {
         public static final int Y_AXIS = 1;
         public static final int TURN_AXIS = 4;
         public static final int FIELD_ORIENTED_BUTTON = 0;
-        public static final double JOYSTICK_DEADBAND = 0.05;
+        public static final double JOYSTICK_DEADBAND = 0.1;
     }
 
     public static class RobotStructure {
@@ -96,7 +96,7 @@ public class Constants {
     public static class Shooter {
         public static final int M_ID_LEFT = 8;
         public static final int M_ID_RIGHT = 9;
-        public static final double LAUNCH_SPEED = 0.4;
+        public static final double LAUNCH_SPEED = -0.4;
     }
 
     public static class PathPlannerConstants {
@@ -113,7 +113,7 @@ public class Constants {
     public static class Elevator {
         public static final int M_ID_LEFT = 1;
         public static final int M_ID_RIGHT = 2;
-        public static final double MOTOR_SPEED = -0.4;
+        public static final double MOTOR_SPEED = -0.2;
         public static final double ANTI_GRAVITY = -0.02;
     }
 
