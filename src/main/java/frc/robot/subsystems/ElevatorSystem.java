@@ -36,16 +36,23 @@ public class ElevatorSystem extends SubsystemBase {
     right.set(Elevator.ANTI_GRAVITY);
   }
 
+  private int encoderMax = -1;
+
   public void setSpeed(double speed) {
-    if ((encoder > 100 && speed > 0) || !toplimitSwitch.get() && speed < 0 || !bottomlimitSwitch.get() && speed > 0) {
+    if (encoderMax != -1 && encoderMax == encoder && speed < 0) {
+      lock();
+      return;
+    }
+
+    if (!toplimitSwitch.get() && speed < 0 || !bottomlimitSwitch.get() && speed > 0) {
       lock();
       return;
     }
 
     if (speed > 0) {
-      encoder++;
-    } else if (speed < 0) {
       encoder--;
+    } else if (speed < 0) {
+      encoder++;
     }
 
     left.set(speed);
@@ -57,6 +64,10 @@ public class ElevatorSystem extends SubsystemBase {
   public void stop() {
     left.set(0);
     right.set(0);
+  }
+
+  public void setEncoderMax(int max) {
+    encoderMax = max;
   }
 
   public void addSpeed() {
