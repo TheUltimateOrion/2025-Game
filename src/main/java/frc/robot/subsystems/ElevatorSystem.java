@@ -4,7 +4,9 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
@@ -13,6 +15,10 @@ public class ElevatorSystem extends SubsystemBase {
   private final TalonFX left;
   private final TalonFX right;
   private static final double DEFAULT_SPEED = 0.25;
+  private static PIDController pid = new PIDController(30, 0, 0.5);
+
+  private static int encoder = 0;
+  private static double mot = 0.5;
 
   // // TODO: update IDs
   private final DigitalInput toplimitSwitch = new DigitalInput(5);
@@ -31,13 +37,21 @@ public class ElevatorSystem extends SubsystemBase {
   }
 
   public void setSpeed(double speed) {
-    if (!toplimitSwitch.get() && speed < 0 || !bottomlimitSwitch.get() && speed > 0) {
+    if ((encoder > 100 && speed > 0) || !toplimitSwitch.get() && speed < 0 || !bottomlimitSwitch.get() && speed > 0) {
       lock();
       return;
     }
 
+    if (speed > 0) {
+      encoder++;
+    } else if (speed < 0) {
+      encoder--;
+    }
+
     left.set(speed);
     right.set(speed);
+
+    System.out.println("Encoder: " + encoder);
   }
 
   public void stop() {
@@ -66,5 +80,16 @@ public class ElevatorSystem extends SubsystemBase {
 
     left.set(spd_left - DEFAULT_SPEED);
     right.set(spd_right - DEFAULT_SPEED);
+  }
+
+  @Override
+  public void periodic() {
+    double target = 2;
+    double current = mot;
+    double output = pid.calculate(current, target);
+    double timeStep = 0.02; // assuming periodic is called every 20ms
+    double interpolationFactor = timeStep / 10.0; // 10 seconds interpolation
+    mot = current + output * interpolationFactor;
+    SmartDashboard.putNumber("PID", mot);
   }
 }
