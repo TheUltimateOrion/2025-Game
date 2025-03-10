@@ -9,16 +9,16 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.Elevator;
 
 public class ElevatorSystem extends SubsystemBase {
   private final TalonFX left;
   private final TalonFX right;
   private static final double DEFAULT_SPEED = 0.25;
-  private static PIDController pid = new PIDController(30, 0, 0.5);
 
   private static int encoder = 0;
-  private static double mot = 0.5;
 
   // // TODO: update IDs
   private final DigitalInput toplimitSwitch = new DigitalInput(5);
@@ -36,10 +36,16 @@ public class ElevatorSystem extends SubsystemBase {
     right.set(Elevator.ANTI_GRAVITY);
   }
 
-  private int encoderMax = -1;
+  private int encoderMax = 130;
 
   public void setSpeed(double speed) {
-    if (encoderMax != -1 && encoderMax == encoder && speed < 0) {
+    if (speed > 0) {
+      encoder--;
+    } else if (speed < 0) {
+      encoder++;
+    }
+
+    if (encoderMax == encoder) {
       lock();
       return;
     }
@@ -49,12 +55,7 @@ public class ElevatorSystem extends SubsystemBase {
       return;
     }
 
-    if (speed > 0) {
-      encoder--;
-    } else if (speed < 0) {
-      encoder++;
-    }
-
+    // double motorSpeed = speed + (Elevator.ANTI_GRAVITY - speed) * ease(elapsed);
     left.set(speed);
     right.set(speed);
 
@@ -68,6 +69,15 @@ public class ElevatorSystem extends SubsystemBase {
 
   public void setEncoderMax(int max) {
     encoderMax = max;
+    if (encoder > encoderMax) {
+      for (int i = 0; i < 10; i++) {
+        setSpeed(-Constants.Elevator.MOTOR_SPEED - 0.1);
+      }
+      lock();
+      // while (encoder > encoderMax) {
+      // }
+    }
+
   }
 
   public void addSpeed() {
@@ -93,14 +103,16 @@ public class ElevatorSystem extends SubsystemBase {
     right.set(spd_right - DEFAULT_SPEED);
   }
 
+  private double ease(double t) {
+    if (t > 1) {
+      return 1;
+    } else if (t < 0) {
+      return 0;
+    }
+    return (1 - Math.cos(t * Math.PI)) / 2;
+  }
+
   @Override
   public void periodic() {
-    double target = 2;
-    double current = mot;
-    double output = pid.calculate(current, target);
-    double timeStep = 0.02; // assuming periodic is called every 20ms
-    double interpolationFactor = timeStep / 10.0; // 10 seconds interpolation
-    mot = current + output * interpolationFactor;
-    SmartDashboard.putNumber("PID", mot);
   }
 }

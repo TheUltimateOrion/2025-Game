@@ -44,9 +44,10 @@ public class RobotContainer {
         private int currentMax = 0;
         private ArrayList<Integer> maxes = new ArrayList<Integer>() {
                 {
-                        add(0);
-                        add(50);
-                        add(100);
+                        add(90);
+                        add(120);
+                        add(150);
+                        add(180);
                 }
         };
 
@@ -65,6 +66,8 @@ public class RobotContainer {
                 shooter.setDefaultCommand(new ShootNote(shooter, () -> controller.getRightTriggerAxis()));
 
                 configureBindings();
+
+                elevator.setEncoderMax(maxes.get(maxes.size() - 1));
         }
 
         // keybindings
