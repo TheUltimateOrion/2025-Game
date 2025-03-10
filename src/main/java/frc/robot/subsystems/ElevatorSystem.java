@@ -15,10 +15,11 @@ public class ElevatorSystem extends SubsystemBase {
   private final TalonFX left;
   private final TalonFX right;
   private static final double DEFAULT_SPEED = 0.25;
-  private static PIDController pid = new PIDController(30, 0, 0.5);
 
   private static int encoder = 0;
-  private static double mot = 0.5;
+  private static double elapsed = 0;
+
+  private static double releaseSpeed;
 
   // // TODO: update IDs
   private final DigitalInput toplimitSwitch = new DigitalInput(5);
@@ -32,13 +33,21 @@ public class ElevatorSystem extends SubsystemBase {
   }
 
   public void lock() {
-    left.set(Elevator.ANTI_GRAVITY);
-    right.set(Elevator.ANTI_GRAVITY);
+    elapsed += 0.01;
+    double speed = releaseSpeed + (Elevator.ANTI_GRAVITY - releaseSpeed) * ease(elapsed);
+    left.set(speed);
+    right.set(speed);
+  }
+
+  public void startLerp() {
+    elapsed = 0;
+    releaseSpeed = (left.get() + right.get()) / 2;
   }
 
   private int encoderMax = -1;
 
   public void setSpeed(double speed) {
+    elapsed -= 0.01;
     if (encoderMax != -1 && encoderMax == encoder && speed < 0) {
       lock();
       return;
@@ -54,9 +63,9 @@ public class ElevatorSystem extends SubsystemBase {
     } else if (speed < 0) {
       encoder++;
     }
-
-    left.set(speed);
-    right.set(speed);
+    double motorSpeed = speed + (Elevator.ANTI_GRAVITY - speed) * ease(elapsed);
+    left.set(motorSpeed);
+    right.set(motorSpeed);
 
     System.out.println("Encoder: " + encoder);
   }
@@ -93,14 +102,16 @@ public class ElevatorSystem extends SubsystemBase {
     right.set(spd_right - DEFAULT_SPEED);
   }
 
+  private double ease(double t) {
+    if (t > 1) {
+      return 1;
+    } else if (t < 0) {
+      return 0;
+    }
+    return (1 - Math.cos(t * Math.PI)) / 2;
+  }
+
   @Override
   public void periodic() {
-    double target = 2;
-    double current = mot;
-    double output = pid.calculate(current, target);
-    double timeStep = 0.02; // assuming periodic is called every 20ms
-    double interpolationFactor = timeStep / 10.0; // 10 seconds interpolation
-    mot = current + output * interpolationFactor;
-    SmartDashboard.putNumber("PID", mot);
   }
 }

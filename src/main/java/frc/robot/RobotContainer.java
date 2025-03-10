@@ -45,8 +45,10 @@ public class RobotContainer {
         private ArrayList<Integer> maxes = new ArrayList<Integer>() {
                 {
                         add(0);
-                        add(50);
-                        add(100);
+                        add(45);
+                        add(80);
+                        add(105);
+                        add(130);
                 }
         };
 
@@ -91,12 +93,14 @@ public class RobotContainer {
                                 .whileTrue(
                                                 new RepeatCommand(new InstantCommand(() -> elevator
                                                                 .setSpeed(Constants.Elevator.MOTOR_SPEED))))
-                                .onFalse(new InstantCommand(() -> elevator.lock()));
+                                .onFalse(new InstantCommand(() -> elevator.startLerp()))
+                                .whileFalse(new InstantCommand(() -> elevator.lock()));
                 new POVButton(controller, Keybindings.DPAD_DOWN)
                                 .whileTrue(
                                                 new RepeatCommand(new InstantCommand(() -> elevator
                                                                 .setSpeed(-Constants.Elevator.MOTOR_SPEED))))
-                                .onFalse(new InstantCommand(() -> elevator.lock()));
+                                .onFalse(new InstantCommand(() -> elevator.startLerp()))
+                                .whileFalse(new InstantCommand(() -> elevator.lock()));
 
                 // left bumper -> swerve joystick
                 new JoystickButton(controller, Keybindings.BUMPER_LEFT).whileTrue(new SwerveJoystickCmd(
