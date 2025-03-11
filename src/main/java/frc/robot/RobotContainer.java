@@ -41,16 +41,6 @@ public class RobotContainer {
         private final Servo servo = new Servo(0);
         private boolean servoState = false;
 
-        private int currentMax = 0;
-        private ArrayList<Integer> maxes = new ArrayList<Integer>() {
-                {
-                        add(90);
-                        add(120);
-                        add(150);
-                        add(180);
-                }
-        };
-
         // commands
         public RobotContainer() {
                 // create named commands for pathplanner here
@@ -66,8 +56,6 @@ public class RobotContainer {
                 shooter.setDefaultCommand(new ShootNote(shooter, () -> controller.getRightTriggerAxis()));
 
                 configureBindings();
-
-                elevator.setEncoderMax(maxes.get(maxes.size() - 1));
         }
 
         // keybindings
@@ -76,12 +64,6 @@ public class RobotContainer {
                 new JoystickButton(controller, Keybindings.BUTTON_A).onTrue(new InstantCommand(() -> {
                         servoState = !servoState;
                         servo.setAngle(servoState ? 270 : -270);
-                }));
-
-                new JoystickButton(controller, Keybindings.BUTTON_B).onTrue(new InstantCommand(() -> {
-                        currentMax = (currentMax + 1) % maxes.size();
-                        elevator.setEncoderMax(maxes.get(currentMax));
-                        System.out.println(maxes.get(currentMax));
                 }));
 
                 // zero heading
@@ -93,13 +75,13 @@ public class RobotContainer {
                 new POVButton(controller, Keybindings.DPAD_UP)
                                 .whileTrue(
                                                 new RepeatCommand(new InstantCommand(() -> elevator
-                                                                .setSpeed(Constants.Elevator.MOTOR_SPEED))))
-                                .onFalse(new InstantCommand(() -> elevator.lock()));
+                                                                .move(ElevatorSystem.Direction.Up))))
+                                .onFalse(new InstantCommand(() -> elevator.move(ElevatorSystem.Direction.Stop)));
                 new POVButton(controller, Keybindings.DPAD_DOWN)
                                 .whileTrue(
                                                 new RepeatCommand(new InstantCommand(() -> elevator
-                                                                .setSpeed(-Constants.Elevator.MOTOR_SPEED))))
-                                .onFalse(new InstantCommand(() -> elevator.lock()));
+                                                                .move(ElevatorSystem.Direction.Down))))
+                                .onFalse(new InstantCommand(() -> elevator.move(ElevatorSystem.Direction.Stop)));
 
                 // left bumper -> swerve joystick
                 new JoystickButton(controller, Keybindings.BUMPER_LEFT).whileTrue(new SwerveJoystickCmd(
