@@ -23,16 +23,18 @@ import frc.robot.Constants.Shooter;
 import frc.robot.commands.ShootNote;
 import frc.robot.commands.SwerveJoystickAuto;
 import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.commands.VisionCmd;
 import frc.robot.subsystems.ElevatorSystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.VisionSystem;
 
 public class RobotContainer {
         // subsystems
         private final ElevatorSystem elevator = new ElevatorSystem(Elevator.M_ID_LEFT, Elevator.M_ID_RIGHT);
         private final ShooterSubsystem shooter = new ShooterSubsystem(Shooter.M_ID_LEFT, Shooter.M_ID_RIGHT);
         private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-
+        private final VisionSystem visionSystem = new VisionSystem();
         // controllers
         private final XboxController controller = new XboxController(0);
 
@@ -43,6 +45,7 @@ public class RobotContainer {
 
         // commands
         public RobotContainer() {
+
                 // create named commands for pathplanner here
                 NamedCommands.registerCommand("Drop", new ShootNote(shooter, () -> 0.1));
 
@@ -60,11 +63,11 @@ public class RobotContainer {
 
         // keybindings
         private void configureBindings() {
-
-                new JoystickButton(controller, Keybindings.BUTTON_A).onTrue(new InstantCommand(() -> {
-                        servoState = !servoState;
-                        servo.setAngle(servoState ? 270 : -270);
-                }));
+                new JoystickButton(controller, Keybindings.BUTTON_A)
+                                .onTrue(new InstantCommand(() -> servoState = !servoState))
+                                .whileTrue(new RepeatCommand(new InstantCommand(() -> {
+                                        servo.setAngle(servoState ? 270 : -270);
+                                })));
 
                 // zero heading
                 new JoystickButton(controller, Keybindings.BUTTON_Y)
@@ -89,6 +92,7 @@ public class RobotContainer {
                                 () -> controller.getLeftY(),
                                 () -> -controller.getLeftX(),
                                 () -> -controller.getRightX()));
+                visionSystem.setDefaultCommand(new VisionCmd(visionSystem));
         }
 
         public Command getAutonomousCommand() {
