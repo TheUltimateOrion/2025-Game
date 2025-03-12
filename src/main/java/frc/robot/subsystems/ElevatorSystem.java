@@ -36,6 +36,7 @@ public class ElevatorSystem extends SubsystemBase {
   };
 
   public void move(Direction dir) {
+    System.out.println(left.getRotorPosition().getValueAsDouble());
     double speed = dir == Direction.Up ? Elevator.MOTOR_SPEED : -Elevator.MOTOR_SPEED;
 
     if (dir == Direction.Stop) {

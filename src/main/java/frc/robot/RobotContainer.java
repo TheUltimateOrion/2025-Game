@@ -44,7 +44,7 @@ public class RobotContainer {
         public RobotContainer() {
 
                 // create named commands for pathplanner here
-                NamedCommands.registerCommand("Drop", new ShootNote(shooter, () -> 0.1));
+                NamedCommands.registerCommand("ShootL2", new ShootNote(shooter, () -> 0.1));
 
                 // swerveSubsystem.setDefaultCommand(new SwerveJoystickAuto(
                 // swerveSubsystem,
@@ -94,6 +94,6 @@ public class RobotContainer {
         }
 
         public Command getAutonomousCommand() {
-                return new PathPlannerAuto("Drop It");
+                return new PathPlannerAuto("Coral 1");
         }
 }
