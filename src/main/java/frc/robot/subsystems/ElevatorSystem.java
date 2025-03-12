@@ -9,17 +9,14 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.Elevator;
 
 public class ElevatorSystem extends SubsystemBase {
   private final TalonFX left;
   private final TalonFX right;
   private static final double DEFAULT_SPEED = 0.25;
-
-  private static int encoder = 0;
-  private static double elapsed = 0;
-
-  private static double releaseSpeed;
 
   // // TODO: update IDs
   private final DigitalInput toplimitSwitch = new DigitalInput(5);
@@ -32,51 +29,26 @@ public class ElevatorSystem extends SubsystemBase {
     left.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
   }
 
-  public void lock() {
-    elapsed += 0.01;
-    double speed = releaseSpeed + (Elevator.ANTI_GRAVITY - releaseSpeed) * ease(elapsed);
+  public enum Direction {
+    Up,
+    Down,
+    Stop
+  };
+
+  public void move(Direction dir) {
+    double speed = dir == Direction.Up ? Elevator.MOTOR_SPEED : -Elevator.MOTOR_SPEED;
+
+    if (dir == Direction.Stop) {
+      speed = Elevator.ANTI_GRAVITY;
+    }
+
     left.set(speed);
     right.set(speed);
-  }
-
-  public void startLerp() {
-    elapsed = 0;
-    releaseSpeed = (left.get() + right.get()) / 2;
-  }
-
-  private int encoderMax = -1;
-
-  public void setSpeed(double speed) {
-    elapsed -= 0.01;
-    if (encoderMax != -1 && encoderMax == encoder && speed < 0) {
-      lock();
-      return;
-    }
-
-    if (!toplimitSwitch.get() && speed < 0 || !bottomlimitSwitch.get() && speed > 0) {
-      lock();
-      return;
-    }
-
-    if (speed > 0) {
-      encoder--;
-    } else if (speed < 0) {
-      encoder++;
-    }
-    double motorSpeed = speed + (Elevator.ANTI_GRAVITY - speed) * ease(elapsed);
-    left.set(motorSpeed);
-    right.set(motorSpeed);
-
-    System.out.println("Encoder: " + encoder);
   }
 
   public void stop() {
     left.set(0);
     right.set(0);
-  }
-
-  public void setEncoderMax(int max) {
-    encoderMax = max;
   }
 
   public void addSpeed() {
