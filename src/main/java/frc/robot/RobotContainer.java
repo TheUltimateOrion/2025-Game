@@ -46,12 +46,12 @@ public class RobotContainer {
                 // create named commands for pathplanner here
                 NamedCommands.registerCommand("Drop", new ShootNote(shooter, () -> 0.1));
 
-                swerveSubsystem.setDefaultCommand(new SwerveJoystickAuto(
-                                swerveSubsystem,
-                                () -> controller.getLeftY(),
-                                () -> controller.getLeftX(),
-                                () -> -controller.getRightY(),
-                                () -> -controller.getRightX()));
+                // swerveSubsystem.setDefaultCommand(new SwerveJoystickAuto(
+                // swerveSubsystem,
+                // () -> controller.getLeftY(),
+                // () -> controller.getLeftX(),
+                // () -> -controller.getRightY(),
+                // () -> -controller.getRightX()));
 
                 shooter.setDefaultCommand(new ShootNote(shooter,
                                 () -> controller.getRightTriggerAxis() - controller.getLeftTriggerAxis()));
@@ -88,7 +88,7 @@ public class RobotContainer {
                 new JoystickButton(controller, Keybindings.BUMPER_LEFT).whileTrue(new SwerveJoystickCmd(
                                 swerveSubsystem,
                                 () -> controller.getLeftY(),
-                                () -> -controller.getLeftX(),
+                                () -> controller.getLeftX(),
                                 () -> -controller.getRightX()));
                 visionSystem.setDefaultCommand(new VisionCmd(visionSystem));
         }

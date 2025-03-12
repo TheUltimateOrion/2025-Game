@@ -64,12 +64,11 @@ public class SwerveJoystickCmd extends Command {
     // SmartDashboard.putNumber("x speed", xSpd);
 
     // SmartDashboard.putNumber("y speed", ySpd);
-    xSpd = xSpdLimiter.calculate(xSpd) * Constants.DriveConstants.TELE_DRIVE_MAX_SPEED_MPS * 0.01;
-    ySpd = ySpdLimiter.calculate(ySpd) * Constants.DriveConstants.TELE_DRIVE_MAX_SPEED_MPS * 0.01;
-    turnSpd = turnSpdLimiter.calculate(turnSpd) * Constants.DriveConstants.TELE_DRIVE_MAX_ANGULAR_SPEED_RPS * 0.05;
-    turnSpd = Math.min(Math.PI / 32, Math.max(turnSpd, -Math.PI / 32));
-
-    // make Chassis speeds
+    xSpd = xSpdLimiter.calculate(xSpd) * Constants.DriveConstants.TELE_DRIVE_MAX_SPEED_MPS;
+    ySpd = ySpdLimiter.calculate(ySpd) * Constants.DriveConstants.TELE_DRIVE_MAX_SPEED_MPS;
+    turnSpd = turnSpdLimiter.calculate(turnSpd) * Constants.DriveConstants.TELE_DRIVE_MAX_ANGULAR_SPEED_RPS;
+    // turnSpd = Math.min(Math.PI / 32, Math.max(turnSpd, -Math.PI / 32));
+    // System.out.println(turnSpd);
     ChassisSpeeds chassisSpeeds;
     chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpd, ySpd, turnSpd, swerveSubsystem.getRotation2d());
     chassisSpeed.set(chassisSpeeds);

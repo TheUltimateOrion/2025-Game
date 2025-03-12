@@ -16,7 +16,7 @@ public class VisionCmd extends Command {
 
   @Override
   public void execute() {
-    System.out.println(LimelightHelpers.getTX(""));
+    // System.out.println(LimelightHelpers.getTX(""));
   }
 
   @Override
