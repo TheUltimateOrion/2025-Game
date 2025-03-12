@@ -199,6 +199,8 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putData("Robot Location", field);
     moduleState.set(getModuleStates());
 
+    System.out.println(gyro.getAngle());
+
   }
 
   public void stopModules() {

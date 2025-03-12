@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
-
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
@@ -39,7 +37,6 @@ public class RobotContainer {
         private final XboxController controller = new XboxController(0);
 
         // motors
-        // TODO: channel
         private final Servo servo = new Servo(0);
         private boolean servoState = false;
 
@@ -56,7 +53,8 @@ public class RobotContainer {
                                 () -> -controller.getRightY(),
                                 () -> -controller.getRightX()));
 
-                shooter.setDefaultCommand(new ShootNote(shooter, () -> controller.getRightTriggerAxis()));
+                shooter.setDefaultCommand(new ShootNote(shooter,
+                                () -> controller.getRightTriggerAxis() - controller.getLeftTriggerAxis()));
 
                 configureBindings();
         }
