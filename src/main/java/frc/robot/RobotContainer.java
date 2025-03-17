@@ -19,7 +19,6 @@ import frc.robot.Constants.Elevator;
 import frc.robot.Constants.Keybindings;
 import frc.robot.Constants.Shooter;
 import frc.robot.commands.ShootNote;
-import frc.robot.commands.SwerveJoystickAuto;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.VisionCmd;
 import frc.robot.subsystems.ElevatorSystem;
@@ -59,6 +58,8 @@ public class RobotContainer {
         }
 
         private void configureBindings() {
+                new JoystickButton(controller, Keybindings.BUTTON_X)
+                                .onTrue(new InstantCommand(() -> elevator.log()));
                 new JoystickButton(controller, Keybindings.BUTTON_A)
                                 .onTrue(new InstantCommand(() -> servoState = !servoState))
                                 .whileTrue(new RepeatCommand(new InstantCommand(() -> {

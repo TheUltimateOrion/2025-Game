@@ -4,8 +4,6 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-// import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
 
@@ -14,14 +12,15 @@ public class ElevatorSystem extends SubsystemBase {
   private final TalonFX right;
   private static final double DEFAULT_SPEED = 0.25;
 
-  // // TODO: update IDs
-  private final DigitalInput toplimitSwitch = new DigitalInput(5);
-  private final DigitalInput bottomlimitSwitch = new DigitalInput(4);
+  private double initialPosition;
+
+  // private final DigitalInput toplimitSwitch = new DigitalInput(5);
+  // private final DigitalInput bottomlimitSwitch = new DigitalInput(4);
 
   public ElevatorSystem(int leftID, int rightID) {
     left = new TalonFX(leftID);
     right = new TalonFX(rightID);
-
+    initialPosition = left.getRotorPosition().getValueAsDouble();
     left.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
   }
 
@@ -31,9 +30,12 @@ public class ElevatorSystem extends SubsystemBase {
     Stop
   };
 
+  public void log() {
+    System.out.println((left.getRotorPosition().getValueAsDouble() - initialPosition));
+  }
+
   public void move(Direction dir) {
     double speed = dir == Direction.Up ? Elevator.MOTOR_SPEED : -Elevator.MOTOR_SPEED;
-    System.out.println(right.getPosition() + ": " + right.getRotorPosition());
     if (dir == Direction.Stop) {
       speed = Elevator.ANTI_GRAVITY;
     }
@@ -68,15 +70,6 @@ public class ElevatorSystem extends SubsystemBase {
 
     left.set(spd_left - DEFAULT_SPEED);
     right.set(spd_right - DEFAULT_SPEED);
-  }
-
-  private double ease(double t) {
-    if (t > 1) {
-      return 1;
-    } else if (t < 0) {
-      return 0;
-    }
-    return (1 - Math.cos(t * Math.PI)) / 2;
   }
 
   @Override

@@ -6,11 +6,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-// import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.hardware.TalonFX;
-// import com.ctre.phoenix6.signals.InvertedValue;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -26,17 +21,6 @@ public class ShooterSubsystem extends SubsystemBase {
     talon2 = new TalonSRX(motor2Id);
 
     talon2.setInverted(true);
-
-    // MotorOutputConfigs config1 = new MotorOutputConfigs();
-    // MotorOutputConfigs config2 = new MotorOutputConfigs();
-    // config1.Inverted = m_1Inverted ? InvertedValue.CounterClockwise_Positive :
-    // InvertedValue.Clockwise_Positive;
-    // config1.Inverted = m_2Inverted ? InvertedValue.CounterClockwise_Positive :
-    // InvertedValue.Clockwise_Positive;
-
-    // m_1.getConfigurator().apply(config1);
-    // m_2.getConfigurator().apply(config2);
-
   }
 
   public void toggleMotors(double speed) {

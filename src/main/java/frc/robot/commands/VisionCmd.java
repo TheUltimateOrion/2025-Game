@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.VisionSystem;
 
+@SuppressWarnings("unused")
 public class VisionCmd extends Command {
 
   public VisionCmd(VisionSystem visionSystem) {
