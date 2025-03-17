@@ -67,7 +67,7 @@ public class SwerveSubsystem extends SubsystemBase {
       Constants.BackRight.ENCODER_OFFSET);
 
   // private final AHRS gyro = new AHRS(SPI.Port.kMXP);
-  private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
+  private final AHRS zeppeli = new AHRS(NavXComType.kMXP_SPI);
   private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.RobotStructure.DRIVE_KINEMATICS,
       new Rotation2d(0),
       getPositions());
@@ -75,7 +75,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private RobotConfig config = null;
 
   public void zeroHeading() {
-    gyro.reset();
+    zeppeli.reset();
 
     if (config == null) {
       try {
@@ -154,7 +154,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public double getHeading() {
-    return Math.IEEEremainder(gyro.getAngle(), 360);
+    return Math.IEEEremainder(zeppeli.getAngle(), 360);
   }
 
   public Rotation2d getRotation2d() {
@@ -175,6 +175,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
+    zeroHeading();
     setModuleStates(Constants.RobotStructure.DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds));
   }
 

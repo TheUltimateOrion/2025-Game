@@ -21,8 +21,8 @@ public class Constants {
     }
 
     public static class DriveConstants {
-        public static final double PHYSICAL_MAX_SPEED_MPS = 2;
-        public static final double PHYSICAL_MAX_ANGULAR_SPEED_RPM = 1.5 * Math.PI;
+        public static final double PHYSICAL_MAX_SPEED_MPS = 0.3;
+        public static final double PHYSICAL_MAX_ANGULAR_SPEED_RPM = Math.PI * 0.15;
         public static final double TELE_DRIVE_MAX_ACCELERATION_UPS = 5;
         public static final double TELE_DRIVE_MAX_ANGULAR_ACCELERATION_UPS = 1.5 * Math.PI;
         public static final double TELE_DRIVE_MAX_SPEED_MPS = PHYSICAL_MAX_SPEED_MPS / 2;

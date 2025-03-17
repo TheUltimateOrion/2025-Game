@@ -12,6 +12,6 @@ public class VisionSystem extends SubsystemBase {
   }
 
   public void log() {
-    System.out.println(LimelightHelpers.getTX(""));
+    // System.out.println(LimelightHelpers.getTX(""));
   }
 }

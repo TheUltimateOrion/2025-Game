@@ -55,11 +55,9 @@ public class RobotContainer {
 
                 shooter.setDefaultCommand(new ShootNote(shooter,
                                 () -> controller.getRightTriggerAxis() - controller.getLeftTriggerAxis()));
-
                 configureBindings();
         }
 
-        // keybindings
         private void configureBindings() {
                 new JoystickButton(controller, Keybindings.BUTTON_A)
                                 .onTrue(new InstantCommand(() -> servoState = !servoState))
@@ -85,11 +83,17 @@ public class RobotContainer {
                                 .onFalse(new InstantCommand(() -> elevator.move(ElevatorSystem.Direction.Stop)));
 
                 // left bumper -> swerve joystick
-                new JoystickButton(controller, Keybindings.BUMPER_LEFT).whileTrue(new SwerveJoystickCmd(
+                swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                                 swerveSubsystem,
                                 () -> controller.getLeftY(),
                                 () -> controller.getLeftX(),
                                 () -> -controller.getRightX()));
+                // new JoystickButton(controller, Keybindings.BUMPER_LEFT).whileTrue(new
+                // SwerveJoystickCmd(
+                // swerveSubsystem,
+                // () -> controller.getLeftY(),
+                // () -> controller.getLeftX(),
+                // () -> -controller.getRightX()));
                 visionSystem.setDefaultCommand(new VisionCmd(visionSystem));
         }
 

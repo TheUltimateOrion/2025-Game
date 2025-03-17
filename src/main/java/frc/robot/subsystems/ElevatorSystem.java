@@ -4,13 +4,9 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.Elevator;
 
 public class ElevatorSystem extends SubsystemBase {
@@ -36,9 +32,8 @@ public class ElevatorSystem extends SubsystemBase {
   };
 
   public void move(Direction dir) {
-    System.out.println(left.getRotorPosition().getValueAsDouble());
     double speed = dir == Direction.Up ? Elevator.MOTOR_SPEED : -Elevator.MOTOR_SPEED;
-
+    System.out.println(right.getPosition() + ": " + right.getRotorPosition());
     if (dir == Direction.Stop) {
       speed = Elevator.ANTI_GRAVITY;
     }
