@@ -41,9 +41,9 @@ public class RobotContainer {
 
         // commands
         public RobotContainer() {
-
                 // create named commands for pathplanner here
-                NamedCommands.registerCommand("ShootL2", new ShootNote(shooter, () -> 0.1));
+                NamedCommands.registerCommand("Shoot", new ShootNote(shooter, () -> 1.));
+                NamedCommands.registerCommand("LimelightSearch", new VisionCmd(visionSystem, swerveSubsystem));
 
                 // swerveSubsystem.setDefaultCommand(new SwerveJoystickAuto(
                 // swerveSubsystem,
@@ -51,7 +51,6 @@ public class RobotContainer {
                 // () -> controller.getLeftX(),
                 // () -> -controller.getRightY(),
                 // () -> -controller.getRightX()));
-
                 shooter.setDefaultCommand(new ShootNote(shooter,
                                 () -> controller.getRightTriggerAxis() - controller.getLeftTriggerAxis()));
                 configureBindings();
@@ -95,10 +94,9 @@ public class RobotContainer {
                 // () -> controller.getLeftY(),
                 // () -> controller.getLeftX(),
                 // () -> -controller.getRightX()));
-                visionSystem.setDefaultCommand(new VisionCmd(visionSystem));
         }
 
         public Command getAutonomousCommand() {
-                return new PathPlannerAuto("Coral 1");
+                return new PathPlannerAuto("Coral Auto");
         }
 }

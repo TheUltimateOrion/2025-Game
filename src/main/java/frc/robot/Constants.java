@@ -9,7 +9,7 @@ public class Constants {
 
     public static class SwerveModule {
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
-        public static final double DRIVE_MOTOR_GEAR_RATIO = 1 / 6.746031746031747;
+        public static final double DRIVE_MOTOR_GEAR_RATIO = 1 / 6.75;
         public static final double DRIVE_ENCODER_ROTATION_2_METER = (DRIVE_MOTOR_GEAR_RATIO * WHEEL_DIAMETER_METERS
                 * Math.PI);
         public static final double DRIVE_ENCODER_RPS_2_MPS = DRIVE_ENCODER_ROTATION_2_METER;
@@ -21,10 +21,10 @@ public class Constants {
     }
 
     public static class DriveConstants {
-        public static final double PHYSICAL_MAX_SPEED_MPS = 0.3;
+        public static final double PHYSICAL_MAX_SPEED_MPS = 0.25;
         public static final double PHYSICAL_MAX_ANGULAR_SPEED_RPM = Math.PI * 0.15;
-        public static final double TELE_DRIVE_MAX_ACCELERATION_UPS = 5;
-        public static final double TELE_DRIVE_MAX_ANGULAR_ACCELERATION_UPS = 1.5 * Math.PI;
+        public static final double TELE_DRIVE_MAX_ACCELERATION_UPS = 0.05;
+        public static final double TELE_DRIVE_MAX_ANGULAR_ACCELERATION_UPS = Math.PI * 0.01;
         public static final double TELE_DRIVE_MAX_SPEED_MPS = PHYSICAL_MAX_SPEED_MPS / 2;
         public static final double TELE_DRIVE_MAX_ANGULAR_SPEED_RPS = PHYSICAL_MAX_ANGULAR_SPEED_RPM / 2;
         public static final int X_AXIS = 0;
