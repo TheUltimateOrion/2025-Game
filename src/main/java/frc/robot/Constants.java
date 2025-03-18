@@ -21,10 +21,10 @@ public class Constants {
     }
 
     public static class DriveConstants {
-        public static final double PHYSICAL_MAX_SPEED_MPS = 0.25;
-        public static final double PHYSICAL_MAX_ANGULAR_SPEED_RPM = Math.PI * 0.15;
-        public static final double TELE_DRIVE_MAX_ACCELERATION_UPS = 0.05;
-        public static final double TELE_DRIVE_MAX_ANGULAR_ACCELERATION_UPS = Math.PI * 0.01;
+        public static final double PHYSICAL_MAX_SPEED_MPS = 0.3;
+        public static final double PHYSICAL_MAX_ANGULAR_SPEED_RPM = Math.PI * 0.2;
+        public static final double TELE_DRIVE_MAX_ACCELERATION_UPS = 5;
+        public static final double TELE_DRIVE_MAX_ANGULAR_ACCELERATION_UPS = Math.PI;
         public static final double TELE_DRIVE_MAX_SPEED_MPS = PHYSICAL_MAX_SPEED_MPS / 2;
         public static final double TELE_DRIVE_MAX_ANGULAR_SPEED_RPS = PHYSICAL_MAX_ANGULAR_SPEED_RPM / 2;
         public static final int X_AXIS = 0;

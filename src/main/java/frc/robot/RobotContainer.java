@@ -7,7 +7,9 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -33,7 +35,8 @@ public class RobotContainer {
         private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
         private final VisionSystem visionSystem = new VisionSystem();
         // controllers
-        private final XboxController controller = new XboxController(0);
+        private final XboxController movementController = new XboxController(0);
+        private final XboxController coralController = new XboxController(1);
 
         // motors
         private final Servo servo = new Servo(0);
@@ -52,31 +55,29 @@ public class RobotContainer {
                 // () -> -controller.getRightY(),
                 // () -> -controller.getRightX()));
                 shooter.setDefaultCommand(new ShootNote(shooter,
-                                () -> controller.getRightTriggerAxis() - controller.getLeftTriggerAxis()));
+                                () -> coralController.getRightTriggerAxis() - movementController.getLeftTriggerAxis()));
                 configureBindings();
         }
 
         private void configureBindings() {
-                new JoystickButton(controller, Keybindings.BUTTON_X)
-                                .onTrue(new InstantCommand(() -> elevator.log()));
-                new JoystickButton(controller, Keybindings.BUTTON_A)
+                new JoystickButton(coralController, Keybindings.BUTTON_A)
                                 .onTrue(new InstantCommand(() -> servoState = !servoState))
                                 .whileTrue(new RepeatCommand(new InstantCommand(() -> {
                                         servo.setAngle(servoState ? 270 : -270);
                                 })));
 
                 // zero heading
-                new JoystickButton(controller, Keybindings.BUTTON_Y)
+                new JoystickButton(coralController, Keybindings.BUTTON_Y)
                                 .onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
 
                 // configure DPAD
                 // elevator forward, backward -> start and stop
-                new POVButton(controller, Keybindings.DPAD_UP)
+                new POVButton(coralController, Keybindings.DPAD_UP)
                                 .whileTrue(
                                                 new RepeatCommand(new InstantCommand(() -> elevator
                                                                 .move(ElevatorSystem.Direction.Up))))
                                 .onFalse(new InstantCommand(() -> elevator.move(ElevatorSystem.Direction.Stop)));
-                new POVButton(controller, Keybindings.DPAD_DOWN)
+                new POVButton(coralController, Keybindings.DPAD_DOWN)
                                 .whileTrue(
                                                 new RepeatCommand(new InstantCommand(() -> elevator
                                                                 .move(ElevatorSystem.Direction.Down))))
@@ -85,18 +86,20 @@ public class RobotContainer {
                 // left bumper -> swerve joystick
                 swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                                 swerveSubsystem,
-                                () -> controller.getLeftY(),
-                                () -> controller.getLeftX(),
-                                () -> -controller.getRightX()));
-                // new JoystickButton(controller, Keybindings.BUMPER_LEFT).whileTrue(new
-                // SwerveJoystickCmd(
-                // swerveSubsystem,
-                // () -> controller.getLeftY(),
-                // () -> controller.getLeftX(),
-                // () -> -controller.getRightX()));
+                                () -> movementController.getLeftY(),
+                                () -> movementController.getLeftX(),
+                                () -> -movementController.getRightX()));
         }
 
         public Command getAutonomousCommand() {
-                return new PathPlannerAuto("Coral Auto");
+                return new InstantCommand(() -> {
+                        swerveSubsystem.zeroHeading();
+                        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(-0.1, 0, 0,
+                                        swerveSubsystem.getRotation2d());
+                        swerveSubsystem.drive(speeds, true);
+                        Timer.delay(1);
+                        swerveSubsystem.stopModules();
+                });
+                // return new PathPlannerAuto("Coral Auto");
         }
 }

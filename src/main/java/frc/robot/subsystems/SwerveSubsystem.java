@@ -88,10 +88,10 @@ public class SwerveSubsystem extends SubsystemBase {
           this::getPose,
           this::resetPose,
           this::getCurrentSpeeds,
-          (speeds, feedforwards) -> drive(speeds),
+          (speeds, feedforwards) -> drive(speeds, true),
           new PPHolonomicDriveController(
-              new PIDConstants(5, 0, 0),
-              new PIDConstants(5, 0, 0)),
+              new PIDConstants(0.3, 0, 0),
+              new PIDConstants(0.3, 0, 0)),
           config,
           () -> {
             // Boolean supplier that controls when the path will be mirrored for the red
@@ -148,9 +148,7 @@ public class SwerveSubsystem extends SubsystemBase {
         zeppeli.enableLogging(false);
       } catch (Exception e) {
       }
-
     }).start();
-
   }
 
   public double getHeading() {
@@ -174,8 +172,10 @@ public class SwerveSubsystem extends SubsystemBase {
         backLeft.getState(), backRight.getState());
   }
 
-  public void drive(ChassisSpeeds chassisSpeeds) {
-    zeroHeading();
+  public void drive(ChassisSpeeds chassisSpeeds, boolean doReset) {
+    if (doReset) {
+      zeroHeading();
+    }
     setModuleStates(Constants.RobotStructure.DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds));
   }
 

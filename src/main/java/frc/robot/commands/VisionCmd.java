@@ -13,6 +13,8 @@ public class VisionCmd extends Command {
   private final VisionSystem visionSystem;
   private final SwerveSubsystem swerveSubsystem;
 
+  private boolean shouldFinish = false;
+
   public VisionCmd(VisionSystem visionSystem, SwerveSubsystem swerveSubsystem) {
     addRequirements(visionSystem, swerveSubsystem);
     this.visionSystem = visionSystem;
@@ -25,20 +27,23 @@ public class VisionCmd extends Command {
 
   @Override
   public void execute() {
-    boolean cond1 = LimelightHelpers.getTX("limelight") < 0.01;
-    boolean cond2 = LimelightHelpers.getTY("limelight") < 0.01;
-    while (cond1 && cond2) {
-      drive();
+    boolean cond1 = LimelightHelpers.getTA("limelight") > 10;
+    boolean cond2 = Math.abs(LimelightHelpers.getTX("limelight")) < 45;
+    if ((cond1 && cond2) || !LimelightHelpers.getTV("limelight")) {
+      this.shouldFinish = true;
+      swerveSubsystem.stopModules();
     }
+    drive();
   }
 
   @Override
   public void end(boolean interrupted) {
+    swerveSubsystem.stopModules();
   }
 
   @Override
   public boolean isFinished() {
-    return false;
+    return this.shouldFinish;
   }
 
   // simple proportional turning control with Limelight.
@@ -54,7 +59,7 @@ public class VisionCmd extends Command {
     // if it is too high, the robot will oscillate around.
     // if it is too low, the robot will never reach its target
     // if the robot never turns in the correct direction, kP should be inverted.
-    double kP = .035;
+    double kP = .005;
 
     // tx ranges from (-hfov/2) to (hfov/2) in degrees. If your target is on the
     // rightmost edge of
@@ -76,7 +81,7 @@ public class VisionCmd extends Command {
   // if your limelight and target are mounted at the same or similar heights, use
   // "ta" (area) for target ranging rather than "ty"
   double limelight_range_proportional() {
-    double kP = .1;
+    double kP = .02;
     double targetingForwardSpeed = LimelightHelpers.getTY("limelight") * kP;
     targetingForwardSpeed *= Constants.DriveConstants.TELE_DRIVE_MAX_SPEED_MPS;
     targetingForwardSpeed *= -1.0;
@@ -92,7 +97,7 @@ public class VisionCmd extends Command {
     final var forward_limelight = limelight_range_proportional();
 
     ChassisSpeeds speeds = new ChassisSpeeds(forward_limelight, 0.0, rot_limelight);
-    swerveSubsystem.drive(speeds);
+    swerveSubsystem.drive(speeds, false);
   }
 
 }

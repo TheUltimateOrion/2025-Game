@@ -73,7 +73,7 @@ public class SwerveJoystickCmd extends Command {
     chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpd, ySpd, turnSpd, swerveSubsystem.getRotation2d());
     chassisSpeed.set(chassisSpeeds);
 
-    swerveSubsystem.drive(chassisSpeeds);
+    swerveSubsystem.drive(chassisSpeeds, true);
 
     // SwerveModuleState[] states = swerveSubsystem.getModuleStates();
     // SmartDashboard.putString("1", states[0].toString());
