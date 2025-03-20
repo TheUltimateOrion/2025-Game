@@ -59,7 +59,7 @@ public class VisionCmd extends Command {
     // if it is too high, the robot will oscillate around.
     // if it is too low, the robot will never reach its target
     // if the robot never turns in the correct direction, kP should be inverted.
-    double kP = .005;
+    double kP = .05;
 
     // tx ranges from (-hfov/2) to (hfov/2) in degrees. If your target is on the
     // rightmost edge of
@@ -81,7 +81,7 @@ public class VisionCmd extends Command {
   // if your limelight and target are mounted at the same or similar heights, use
   // "ta" (area) for target ranging rather than "ty"
   double limelight_range_proportional() {
-    double kP = .02;
+    double kP = .1;
     double targetingForwardSpeed = LimelightHelpers.getTY("limelight") * kP;
     targetingForwardSpeed *= Constants.DriveConstants.TELE_DRIVE_MAX_SPEED_MPS;
     targetingForwardSpeed *= -1.0;

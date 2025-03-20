@@ -5,11 +5,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -34,6 +31,7 @@ public class RobotContainer {
         private final ShooterSubsystem shooter = new ShooterSubsystem(Shooter.M_ID_LEFT, Shooter.M_ID_RIGHT);
         private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
         private final VisionSystem visionSystem = new VisionSystem();
+
         // controllers
         private final XboxController movementController = new XboxController(0);
         private final XboxController coralController = new XboxController(1);
@@ -41,6 +39,7 @@ public class RobotContainer {
         // motors
         private final Servo servo = new Servo(0);
         private boolean servoState = false;
+        Command visionCommand;
 
         // commands
         public RobotContainer() {
@@ -48,14 +47,10 @@ public class RobotContainer {
                 NamedCommands.registerCommand("Shoot", new ShootNote(shooter, () -> 1.));
                 NamedCommands.registerCommand("LimelightSearch", new VisionCmd(visionSystem, swerveSubsystem));
 
-                // swerveSubsystem.setDefaultCommand(new SwerveJoystickAuto(
-                // swerveSubsystem,
-                // () -> controller.getLeftY(),
-                // () -> controller.getLeftX(),
-                // () -> -controller.getRightY(),
-                // () -> -controller.getRightX()));
                 shooter.setDefaultCommand(new ShootNote(shooter,
-                                () -> coralController.getRightTriggerAxis() - movementController.getLeftTriggerAxis()));
+                                () -> coralController.getRightTriggerAxis() - coralController.getLeftTriggerAxis()));
+
+                this.visionCommand = new VisionCmd(visionSystem, swerveSubsystem);
                 configureBindings();
         }
 
@@ -92,14 +87,18 @@ public class RobotContainer {
         }
 
         public Command getAutonomousCommand() {
-                return new InstantCommand(() -> {
-                        swerveSubsystem.zeroHeading();
-                        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(-0.1, 0, 0,
-                                        swerveSubsystem.getRotation2d());
-                        swerveSubsystem.drive(speeds, true);
-                        Timer.delay(1);
-                        swerveSubsystem.stopModules();
-                });
+                // return new InstantCommand(() -> {
+                // });
+                return visionCommand;
+                // return new InstantCommand(() -> {
+                // Timer.delay(5);
+                // swerveSubsystem.zeroHeading();
+                // ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(-0.1, 0, 0,
+                // swerveSubsystem.getRotation2d());
+                // swerveSubsystem.drive(speeds, true);
+                // Timer.delay(1);
+                // swerveSubsystem.stopModules();
+                // });
                 // return new PathPlannerAuto("Coral Auto");
         }
 }

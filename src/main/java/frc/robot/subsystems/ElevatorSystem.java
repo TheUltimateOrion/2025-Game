@@ -4,6 +4,8 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Elevator;
 
@@ -11,6 +13,10 @@ public class ElevatorSystem extends SubsystemBase {
   private final TalonFX left;
   private final TalonFX right;
   private static final double DEFAULT_SPEED = 0.25;
+
+  private final PIDController pid = new PIDController(20, 0, 0.5);
+
+  private static double mot = 0;
 
   private double initialPosition;
 
@@ -36,12 +42,37 @@ public class ElevatorSystem extends SubsystemBase {
 
   public void move(Direction dir) {
     double speed = dir == Direction.Up ? Elevator.MOTOR_SPEED : -Elevator.MOTOR_SPEED;
+
     if (dir == Direction.Stop) {
-      speed = Elevator.ANTI_GRAVITY;
+      // speed = Elevator.ANTI_GRAVITY;
+      // left.set(speed);
+      // right.set(speed);
+
+      // double output = pid.calculate(mot, 1);
+      // mot += output * 0.003;
+
+      mot = 0;
+      pid.reset();
+      return;
     }
 
-    left.set(speed);
-    right.set(speed);
+    // left.set(speed);
+    // right.set(speed);
+
+    // left.getRotorPosition().getValueAsDouble();
+    double output = pid.calculate(mot, 1);
+    mot += output * 0.003;
+
+    if (dir == Direction.Up) {
+      left.set(-mot);
+      right.set(-mot);
+    } else if (dir == Direction.Down) {
+      left.set(mot);
+      right.set(mot);
+    } else {
+      left.set(Elevator.ANTI_GRAVITY);
+      right.set(Elevator.ANTI_GRAVITY);
+    }
   }
 
   public void stop() {
@@ -74,5 +105,9 @@ public class ElevatorSystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // double current = mot;
+    // double output = pid.calculate(current, 1);
+    // mot = current + output * 0.003;
+    // SmartDashboard.putNumber("PID", mot);
   }
 }
