@@ -36,6 +36,7 @@ public class SwerveModule extends SubsystemBase {
   private final TalonFX turnMotor;
 
   private final PIDController turningPID;
+  private final PIDController drivingPID;
 
   private final CANcoder absoluteEncoder;
 
@@ -73,7 +74,10 @@ public class SwerveModule extends SubsystemBase {
     turnMotor.getConfigurator().apply(fx_cfg);
 
     turningPID = new PIDController(Constants.SwerveModule.P_TURN, 0, Constants.SwerveModule.D_TURN);
+    drivingPID = new PIDController(0.4, 0, 0.4);
+
     turningPID.enableContinuousInput(-Math.PI, Math.PI);
+
     resetEncoders();
   }
 

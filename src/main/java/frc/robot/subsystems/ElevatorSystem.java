@@ -16,7 +16,7 @@ public class ElevatorSystem extends SubsystemBase {
 
   private final PIDController pid = new PIDController(20, 0, 0.5);
 
-  private static double mot = 0;
+  private static double current = 0;
 
   private double initialPosition;
 
@@ -48,30 +48,29 @@ public class ElevatorSystem extends SubsystemBase {
       // left.set(speed);
       // right.set(speed);
 
-      // double output = pid.calculate(mot, 1);
-      // mot += output * 0.003;
+      double output = pid.calculate(current, Elevator.ANTI_GRAVITY);
+      current += output * 0.001;
 
-      mot = 0;
-      pid.reset();
+      left.set(-current);
+      right.set(-current);
+
+      // current = 0;
+      // pid.reset();
       return;
     }
 
     // left.set(speed);
     // right.set(speed);
 
-    // left.getRotorPosition().getValueAsDouble();
-    double output = pid.calculate(mot, 1);
-    mot += output * 0.003;
+    double output = pid.calculate(current, dir == Direction.Up ? 1 : -1);
+    current += output * 0.001;
 
     if (dir == Direction.Up) {
-      left.set(-mot);
-      right.set(-mot);
+      left.set(-current);
+      right.set(-current);
     } else if (dir == Direction.Down) {
-      left.set(mot);
-      right.set(mot);
-    } else {
-      left.set(Elevator.ANTI_GRAVITY);
-      right.set(Elevator.ANTI_GRAVITY);
+      left.set(current);
+      right.set(current);
     }
   }
 

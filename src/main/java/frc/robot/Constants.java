@@ -96,7 +96,7 @@ public class Constants {
     public static class Shooter {
         public static final int M_ID_LEFT = 8;
         public static final int M_ID_RIGHT = 9;
-        public static final double LAUNCH_SPEED = -0.4;
+        public static final double LAUNCH_SPEED = -0.6;
     }
 
     public static class PathPlannerConstants {

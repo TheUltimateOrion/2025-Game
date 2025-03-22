@@ -71,7 +71,8 @@ public class RobotContainer {
                                 .whileTrue(
                                                 new RepeatCommand(new InstantCommand(() -> elevator
                                                                 .move(ElevatorSystem.Direction.Up))))
-                                .onFalse(new InstantCommand(() -> elevator.move(ElevatorSystem.Direction.Stop)));
+                                .onFalse(new RepeatCommand(new InstantCommand(
+                                                () -> elevator.move(ElevatorSystem.Direction.Stop))));
                 new POVButton(coralController, Keybindings.DPAD_DOWN)
                                 .whileTrue(
                                                 new RepeatCommand(new InstantCommand(() -> elevator
