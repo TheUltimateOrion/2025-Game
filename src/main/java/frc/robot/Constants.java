@@ -96,7 +96,7 @@ public class Constants {
     public static class Shooter {
         public static final int M_ID_LEFT = 8;
         public static final int M_ID_RIGHT = 9;
-        public static final double LAUNCH_SPEED = -0.6;
+        public static final double LAUNCH_SPEED = -0.7;
     }
 
     public static class PathPlannerConstants {
@@ -113,8 +113,17 @@ public class Constants {
     public static class Elevator {
         public static final int M_ID_LEFT = 1;
         public static final int M_ID_RIGHT = 2;
-        public static final double MOTOR_SPEED = -0.2;
-        public static final double ANTI_GRAVITY = -0.02;
+        public static final int L4 = 1860;
+        public static final int L3 = 960;
+        public static final int L2 = 440;
+        public static final int L1 = 0;
+    }
+
+    public static class DeepCage {
+        public static final int M_ID_1 = 3;
+        public static final int M_ID_2 = 4;
+        public static final double MOTOR_SPEED = 50;
+        public static final double GEARBOX_RATIO = 1.0 / 100.0;
     }
 
     public static class Keybindings {

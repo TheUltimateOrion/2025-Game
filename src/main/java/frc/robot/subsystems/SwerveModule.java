@@ -87,7 +87,6 @@ public class SwerveModule extends SubsystemBase {
 
   public double getTurnPosition() {
     return turnMotor.getRotorPosition().getValueAsDouble() * Constants.SwerveModule.TURN_ENCODER_ROTATION_2_RAD;
-
   }
 
   public double getDriveVelocity() {
