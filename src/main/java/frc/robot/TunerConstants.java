@@ -6,6 +6,7 @@ import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModuleConstantsFactory;
 import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModule.ClosedLoopOutputType;
 import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModuleConstants.SteerFeedbackType;
+import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 
 import edu.wpi.first.math.util.Units;
 
@@ -45,7 +46,7 @@ public class TunerConstants {
   // This may need to be tuned to your individual robot
   private static final double kCoupleRatio = 3.5714285714285716;
 
-  private static final double kDriveGearRatio = 6.746031746031747;
+  private static final double kDriveGearRatio = 6.75;
   private static final double kSteerGearRatio = 12.8;
   private static final double kWheelRadiusInches = 2;
 
@@ -63,8 +64,7 @@ public class TunerConstants {
   private static final double kDriveFrictionVoltage = 0.25;
 
   @SuppressWarnings("unused")
-  private static final LegacySwerveDrivetrainConstants DrivetrainConstants = new LegacySwerveDrivetrainConstants()
-      .withCANbusName(kCANbusName);
+  private static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants().withCANBusName(kCANbusName);
 
   private static final LegacySwerveModuleConstantsFactory ConstantCreator = new LegacySwerveModuleConstantsFactory()
       .withDriveMotorGearRatio(kDriveGearRatio)
