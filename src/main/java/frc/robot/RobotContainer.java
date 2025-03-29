@@ -88,8 +88,8 @@ public class RobotContainer {
                                 .whileTrue(new InstantCommand(() -> elevator.set(Elevator.L2)));
                 new POVButton(coralController, Keybindings.DPAD_DOWN)
                                 .whileTrue(new InstantCommand(() -> elevator.set(Elevator.L3)));
-                new POVButton(coralController, Keybindings.DPAD_LEFT)
-                                .whileTrue(new InstantCommand(() -> elevator.set(Elevator.L4)));
+                //new POVButton(coralController, Keybindings.DPAD_LEFT)
+                //                .whileTrue(new InstantCommand(() -> elevator.set(Elevator.L4)));
 
                 swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                                 swerveSubsystem,

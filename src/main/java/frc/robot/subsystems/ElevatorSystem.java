@@ -44,6 +44,8 @@ public class ElevatorSystem extends SubsystemBase {
     motionMagicConfigs.MotionMagicCruiseVelocity = 1500;
     left.getConfigurator().apply(motionMagicConfigs);
     right.getConfigurator().apply(motionMagicConfigs);
+    left.setPosition(0);
+    right.setPosition(0);
   }
 
   public enum Direction {
