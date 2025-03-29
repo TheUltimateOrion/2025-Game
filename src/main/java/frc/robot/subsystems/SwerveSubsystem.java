@@ -7,6 +7,9 @@ package frc.robot.subsystems;
 // import com.kauailabs.navx.frc.AHRS;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
+
+import static edu.wpi.first.units.Units.Rotation;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 
@@ -67,10 +70,10 @@ public class SwerveSubsystem extends SubsystemBase {
       Constants.BackRight.ENCODER_OFFSET);
 
   // private final AHRS gyro = new AHRS(SPI.Port.kMXP);
-  private final AHRS zeppeli = new AHRS(NavXComType.kMXP_SPI);
+  public final AHRS zeppeli = new AHRS(NavXComType.kMXP_SPI);
   private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.RobotStructure.DRIVE_KINEMATICS,
       new Rotation2d(0),
-      getPositions());
+      getPositions(), new Pose2d(10, 10, Rotation2d.fromDegrees(0)));
 
   private RobotConfig config = null;
 
@@ -108,34 +111,6 @@ public class SwerveSubsystem extends SubsystemBase {
           this);
     }
 
-    // path planner
-    // AutoBuilder.configureHolonomic(this::getPose, this::resetPose,
-    // this::getCurrentSpeeds, this::drive,
-    // Constants.PathPlannerConstants.kHolonomicPathFollowerConfig,
-    // () -> {
-    // // Boolean supplier that controls when the path will be mirrored for the red
-    // alliance
-    // // This will flip the path being followed to the red side of the field.
-    // // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-    // return true;
-
-    // //var alliance = DriverStation.getAlliance();
-    // //if (alliance.isPresent()) {
-    // // return alliance.get() == DriverStation.Alliance.Red;
-    // //}
-    // //return false;
-    // },
-    // this);
-    // }
-
-    // public static final HolonomicPathFollowerConfig kHolonomicPathFollowerConfig
-    // = new HolonomicPathFollowerConfig(
-    // new PIDConstants(5,0,0),
-    // new PIDConstants(5,0,0),
-    // DriveConstants.kPhysicalMaxSpeedMPS,
-    // 0, //max distance to wheel
-    // new ReplanningConfig());
-
   }
 
   /** Creates a new SwerveSubsystem. */
@@ -151,20 +126,12 @@ public class SwerveSubsystem extends SubsystemBase {
     }).start();
   }
 
-  public double getHeading() {
-    return Math.IEEEremainder(zeppeli.getAngle(), 360);
-  }
-
-  public Rotation2d getRotation2d() {
-    return Rotation2d.fromDegrees(getHeading());
-  }
-
   public Pose2d getPose() {
     return odometer.getPoseMeters();
   }
 
   public void resetPose(Pose2d pose) {
-    odometer.resetPosition(getRotation2d(), getPositions(), pose);
+    odometer.resetPosition(zeppeli.getRotation2d(), getPositions(), pose);
   }
 
   public ChassisSpeeds getCurrentSpeeds() {
@@ -193,10 +160,10 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     field.setRobotPose(getPose());
-    odometer.update(getRotation2d(), getPositions());
-    SmartDashboard.putNumber("Robot Heading", getHeading());
-    // SmartDashboard.putString("Robot Location",
-    // getPose().getTranslation().toString());
+    odometer.update(zeppeli.getRotation2d(), getPositions());
+    // SmartDashboard.putNumber("Robot Heading", getHeading());
+    // // SmartDashboard.putString("Robot Location",
+    // // getPose().getTranslation().toString());
     SmartDashboard.putData("Robot Location", field);
     moduleState.set(getModuleStates());
 
@@ -213,16 +180,21 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.DriveConstants.PHYSICAL_MAX_SPEED_MPS);
-    frontLeft.setDesiredState(desiredStates[2]);
-    frontRight.setDesiredState(desiredStates[3]);
-    backLeft.setDesiredState(desiredStates[0]);
-    backRight.setDesiredState(desiredStates[1]);
+    // frontLeft.setDesiredState(desiredStates[2]);
+    // frontRight.setDesiredState(desiredStates[3]);
+    // backLeft.setDesiredState(desiredStates[0]);
+    // backRight.setDesiredState(desiredStates[1]);
+
+    frontLeft.setDesiredState(desiredStates[0]);
+    frontRight.setDesiredState(desiredStates[1]);
+    backLeft.setDesiredState(desiredStates[2]);
+    backRight.setDesiredState(desiredStates[3]);
 
   }
 
   public SwerveModuleState[] getModuleStates() {
-    SwerveModuleState[] states = { frontLeft.getState(), backLeft.getState(), backRight.getState(),
-        frontRight.getState() };
+    SwerveModuleState[] states = { frontLeft.getState(), frontRight.getState(), backLeft.getState(),
+        backRight.getState() };
     return states;
   }
 

@@ -70,15 +70,16 @@ public class RobotContainer {
                 new JoystickButton(coralController, Keybindings.BUTTON_Y)
                                 .onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
 
-                
                 new JoystickButton(coralController, Keybindings.BUMPER_RIGHT)
-                                .whileTrue(new InstantCommand(
+                                .whileTrue(new RepeatCommand(new InstantCommand(
                                                 () -> deepCage.setSpeed(Constants.DeepCage.MOTOR_SPEED),
-                                                deepCage));
+                                                deepCage)))
+                                .onFalse(new InstantCommand(() -> deepCage.setSpeed(0), deepCage));
                 new JoystickButton(coralController, Keybindings.BUMPER_LEFT)
-                                .whileTrue(new InstantCommand(
+                                .whileTrue(new RepeatCommand(new InstantCommand(
                                                 () -> deepCage.setSpeed(-Constants.DeepCage.MOTOR_SPEED),
-                                                deepCage));
+                                                deepCage)))
+                                .onFalse(new InstantCommand(() -> deepCage.setSpeed(0), deepCage));
                 new POVButton(coralController, Keybindings.DPAD_UP)
                                 .whileTrue(new InstantCommand(() -> elevator.set(Elevator.L1)));
                 new POVButton(coralController, Keybindings.DPAD_RIGHT)
@@ -88,7 +89,6 @@ public class RobotContainer {
                 new POVButton(coralController, Keybindings.DPAD_LEFT)
                                 .whileTrue(new InstantCommand(() -> elevator.set(Elevator.L4)));
 
-                // left bumper -> swerve joystick
                 swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                                 swerveSubsystem,
                                 () -> movementController.getLeftY(),
@@ -99,7 +99,7 @@ public class RobotContainer {
         public Command getAutonomousCommand() {
                 // return new InstantCommand(() -> {
                 // });
-                return visionCommand;
+                return new RepeatCommand(visionCommand);
                 // return new InstantCommand(() -> {
                 // Timer.delay(5);
                 // swerveSubsystem.zeroHeading();

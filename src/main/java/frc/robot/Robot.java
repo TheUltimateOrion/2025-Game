@@ -52,6 +52,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
+    System.out.println(m_autonomousCommand);
   }
 
   @Override

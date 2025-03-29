@@ -70,7 +70,7 @@ public class SwerveJoystickCmd extends Command {
     // turnSpd = Math.min(Math.PI / 32, Math.max(turnSpd, -Math.PI / 32));
     // System.out.println(turnSpd);
     ChassisSpeeds chassisSpeeds;
-    chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpd, ySpd, turnSpd, swerveSubsystem.getRotation2d());
+    chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpd, ySpd, turnSpd, swerveSubsystem.zeppeli.getRotation2d());
     chassisSpeed.set(chassisSpeeds);
 
     swerveSubsystem.drive(chassisSpeeds, true);

@@ -19,9 +19,6 @@ public class ElevatorSystem extends SubsystemBase {
   private final TalonFX left;
   private final TalonFX right;
 
-  private final double dt = 0.02;
-  private double pos = 0;
-
   public ElevatorSystem(int leftID, int rightID) {
     left = new TalonFX(leftID);
     right = new TalonFX(rightID);

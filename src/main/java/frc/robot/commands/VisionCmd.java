@@ -27,12 +27,12 @@ public class VisionCmd extends Command {
 
   @Override
   public void execute() {
-    boolean cond1 = LimelightHelpers.getTA("limelight") > 10;
-    boolean cond2 = Math.abs(LimelightHelpers.getTX("limelight")) < 45;
-    if ((cond1 && cond2) || !LimelightHelpers.getTV("limelight")) {
-      this.shouldFinish = true;
-      swerveSubsystem.stopModules();
-    }
+    // boolean cond1 = LimelightHelpers.getTA("limelight") > 10;
+    // boolean cond2 = Math.abs(LimelightHelpers.getTX("limelight")) < 45;
+    // if ((cond1 && cond2) || !LimelightHelpers.getTV("limelight")) {
+    // this.shouldFinish = true;
+    // swerveSubsystem.stopModules();
+    // }
     drive();
   }
 
@@ -82,7 +82,7 @@ public class VisionCmd extends Command {
   // "ta" (area) for target ranging rather than "ty"
   double limelight_range_proportional() {
     double kP = .1;
-    double targetingForwardSpeed = LimelightHelpers.getTY("limelight") * kP;
+    double targetingForwardSpeed = LimelightHelpers.getTA("limelight") * kP;
     targetingForwardSpeed *= Constants.DriveConstants.TELE_DRIVE_MAX_SPEED_MPS;
     targetingForwardSpeed *= -1.0;
     return targetingForwardSpeed;

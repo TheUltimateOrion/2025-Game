@@ -37,10 +37,10 @@ public class Constants {
     public static class RobotStructure {
         public static final double TRACK_WIDTH = Units.inchesToMeters(24.75);
         public static final double WHEEL_BASE = Units.inchesToMeters(19);
-        public static final Translation2d FRONT_LEFT_LOCATION = new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2);
-        public static final Translation2d FRONT_RIGHT_LOCATION = new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2);
-        public static final Translation2d BACK_LEFT_LOCATION = new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2);
-        public static final Translation2d BACK_RIGHT_LOCATION = new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2);
+        public static final Translation2d FRONT_LEFT_LOCATION = new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2);
+        public static final Translation2d FRONT_RIGHT_LOCATION = new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2);
+        public static final Translation2d BACK_LEFT_LOCATION = new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2);
+        public static final Translation2d BACK_RIGHT_LOCATION = new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2);
         public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
                 FRONT_LEFT_LOCATION,
                 FRONT_RIGHT_LOCATION,
@@ -122,7 +122,7 @@ public class Constants {
     public static class DeepCage {
         public static final int M_ID_1 = 3;
         public static final int M_ID_2 = 4;
-        public static final double MOTOR_SPEED = 50;
+        public static final double MOTOR_SPEED = 40;
         public static final double GEARBOX_RATIO = 1.0 / 100.0;
     }
 

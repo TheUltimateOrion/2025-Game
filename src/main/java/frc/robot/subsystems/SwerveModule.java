@@ -41,14 +41,14 @@ public class SwerveModule extends SubsystemBase {
   private final CANcoder absoluteEncoder;
 
   private final DCMotorSim m_driveMotorSimModel = new DCMotorSim(
-      LinearSystemId.createDCMotorSystem(DCMotor.getFalcon500Foc(1), 0.001,
-          Math.pow(Constants.SwerveModule.DRIVE_MOTOR_GEAR_RATIO, -1)),
-      DCMotor.getFalcon500Foc(1));
+      LinearSystemId.createDCMotorSystem(DCMotor.getFalcon500(1), 0.00001,
+          Constants.SwerveModule.DRIVE_MOTOR_GEAR_RATIO),
+      DCMotor.getFalcon500(1));
 
   private final DCMotorSim m_turnMotorSimModel = new DCMotorSim(
-      LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60Foc(1), 0.001,
-          Math.pow(Constants.SwerveModule.TURN_MOTOR_GEAR_RATIO, -1)),
-      DCMotor.getKrakenX60Foc(1));
+      LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), 0.00001,
+          Constants.SwerveModule.TURN_MOTOR_GEAR_RATIO),
+      DCMotor.getKrakenX60(1));
 
   /** Creates a new SwerveModule. */
   public SwerveModule(int driveMotorID, int turnMotorID, boolean driveMotorReversed, boolean turningMotorReversed,
@@ -170,6 +170,7 @@ public class SwerveModule extends SubsystemBase {
         Constants.SwerveModule.DRIVE_MOTOR_GEAR_RATIO * m_driveMotorSimModel.getAngularPositionRotations());
     driveMotorSim.setRotorVelocity(Constants.SwerveModule.DRIVE_MOTOR_GEAR_RATIO
         * Units.radiansToRotations(m_driveMotorSimModel.getAngularVelocityRadPerSec()));
+
     turnMotorSim.setRawRotorPosition(
         Constants.SwerveModule.TURN_MOTOR_GEAR_RATIO * m_turnMotorSimModel.getAngularPositionRotations());
     turnMotorSim.setRotorVelocity(Constants.SwerveModule.TURN_MOTOR_GEAR_RATIO
