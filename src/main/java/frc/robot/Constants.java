@@ -35,8 +35,8 @@ public class Constants {
     }
 
     public static class RobotStructure {
-        public static final double TRACK_WIDTH = Units.inchesToMeters(24.75);
-        public static final double WHEEL_BASE = Units.inchesToMeters(19);
+        public static final double TRACK_WIDTH = Units.inchesToMeters(25);
+        public static final double WHEEL_BASE = Units.inchesToMeters(25);
         public static final Translation2d FRONT_LEFT_LOCATION = new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2);
         public static final Translation2d FRONT_RIGHT_LOCATION = new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2);
         public static final Translation2d BACK_LEFT_LOCATION = new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2);

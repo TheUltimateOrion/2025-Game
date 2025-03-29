@@ -73,7 +73,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public final AHRS zeppeli = new AHRS(NavXComType.kMXP_SPI);
   private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.RobotStructure.DRIVE_KINEMATICS,
       new Rotation2d(0),
-      getPositions(), new Pose2d(10, 10, Rotation2d.fromDegrees(0)));
+      getPositions());// , new Pose2d(10, 6, Rotation2d.fromDegrees(0)));
 
   private RobotConfig config = null;
 
@@ -91,10 +91,10 @@ public class SwerveSubsystem extends SubsystemBase {
           this::getPose,
           this::resetPose,
           this::getCurrentSpeeds,
-          (speeds, feedforwards) -> drive(speeds, true),
+          (speeds, feedforwards) -> drive(speeds, false),
           new PPHolonomicDriveController(
-              new PIDConstants(0.3, 0, 0),
-              new PIDConstants(0.3, 0, 0)),
+              new PIDConstants(0.05, 0, 0),
+              new PIDConstants(0.05, 0, 0)),
           config,
           () -> {
             // Boolean supplier that controls when the path will be mirrored for the red

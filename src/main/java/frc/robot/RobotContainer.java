@@ -4,8 +4,17 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathConstraints;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -44,8 +53,6 @@ public class RobotContainer {
         // commands
         public RobotContainer() {
                 // create named commands for pathplanner here
-                NamedCommands.registerCommand("Shoot", new ShootNote(shooter, () -> 1.));
-                NamedCommands.registerCommand("LimelightSearch", new VisionCmd(visionSystem, swerveSubsystem));
 
                 shooter.setDefaultCommand(new ShootNote(shooter,
                                 () -> coralController.getRightTriggerAxis() - coralController.getLeftTriggerAxis()));
@@ -88,18 +95,33 @@ public class RobotContainer {
                                 swerveSubsystem,
                                 () -> movementController.getLeftY(),
                                 () -> movementController.getLeftX(),
-                                () -> -movementController.getRightX()));
+                                () -> movementController.getRightX()));
         }
 
         public Command getAutonomousCommand() {
                 // return new InstantCommand(() -> {
                 // });
-                return new RepeatCommand(visionCommand);
+                return new PathPlannerAuto("New Auto");
+                // Pose2d target = new Pose2d(5.095, 2.644, Rotation2d.fromDegrees(-60));
+                // // Create the constraints to use while pathfinding
+                // PathConstraints constraints = new PathConstraints(
+                // 0.5, 1.0,
+                // Units.degreesToRadians(540), Units.degreesToRadians(360));
+
+                // // Since AutoBuilder is configured, we can use it to build pathfinding
+                // commands
+                // Command pathfindingCommand = AutoBuilder.pathfindToPose(
+                // target,
+                // constraints,
+                // 0.0 // Goal end velocity in meters/sec
+                // ).andThen(new InstantCommand(() -> elevator.set(Elevator.L2))
+                // .andThen(new ShootNote(shooter, () -> 1.)));
+                // return pathfindingCommand;
                 // return new InstantCommand(() -> {
-                // Timer.delay(5);
+                // Timer.delay(2);
                 // swerveSubsystem.zeroHeading();
                 // ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(-0.1, 0, 0,
-                // swerveSubsystem.getRotation2d());
+                // swerveSubsystem.getPose().getRotation());
                 // swerveSubsystem.drive(speeds, true);
                 // Timer.delay(1);
                 // swerveSubsystem.stopModules();

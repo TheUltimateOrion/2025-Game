@@ -30,7 +30,7 @@ public class ElevatorSystem extends SubsystemBase {
     right.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
 
     Slot0Configs slot0Configs = new Slot0Configs();
-    slot0Configs.kP = 0.02; // An error of 1 rotation results in 2.4 V output
+    slot0Configs.kP = 0.03; // An error of 1 rotation results in 2.4 V output
     slot0Configs.kD = 0.005; // A velocity of 1 rps results in 0.1 V output
     slot0Configs.kG = -0.26;
     slot0Configs.kS = 0.105;
@@ -40,8 +40,8 @@ public class ElevatorSystem extends SubsystemBase {
     left.getConfigurator().apply(slot0Configs);
 
     MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs();
-    motionMagicConfigs.MotionMagicAcceleration = 900;
-    motionMagicConfigs.MotionMagicCruiseVelocity = 800;
+    motionMagicConfigs.MotionMagicAcceleration = 1500;
+    motionMagicConfigs.MotionMagicCruiseVelocity = 1500;
     left.getConfigurator().apply(motionMagicConfigs);
     right.getConfigurator().apply(motionMagicConfigs);
   }
