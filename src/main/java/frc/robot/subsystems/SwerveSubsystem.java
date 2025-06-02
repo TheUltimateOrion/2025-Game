@@ -13,6 +13,8 @@ import static edu.wpi.first.units.Units.Rotation;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -20,6 +22,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -29,6 +32,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -75,6 +79,14 @@ public class SwerveSubsystem extends SubsystemBase {
       new Rotation2d(0),
       getPositions());// , new Pose2d(10, 6, Rotation2d.fromDegrees(0)));
 
+  public SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
+      Constants.RobotStructure.DRIVE_KINEMATICS,
+      new Rotation2d(0),
+      getPositions(),
+      new Pose2d(),
+      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+      VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+
   private RobotConfig config = null;
 
   public void zeroHeading() {
@@ -93,8 +105,8 @@ public class SwerveSubsystem extends SubsystemBase {
           this::getCurrentSpeeds,
           (speeds, feedforwards) -> drive(speeds, false),
           new PPHolonomicDriveController(
-              new PIDConstants(0.05, 0, 0),
-              new PIDConstants(0.05, 0, 0)),
+              new PIDConstants(10, 0, 0),
+              new PIDConstants(10, 0, 0)),
           config,
           () -> {
             // Boolean supplier that controls when the path will be mirrored for the red
@@ -127,11 +139,12 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-    return odometer.getPoseMeters();
+    return poseEstimator.getEstimatedPosition();
+
   }
 
   public void resetPose(Pose2d pose) {
-    odometer.resetPosition(zeppeli.getRotation2d(), getPositions(), pose);
+    poseEstimator.resetPosition(zeppeli.getRotation2d(), getPositions(), pose);
   }
 
   public ChassisSpeeds getCurrentSpeeds() {
@@ -160,7 +173,7 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     field.setRobotPose(getPose());
-    odometer.update(zeppeli.getRotation2d(), getPositions());
+    poseEstimator.update(zeppeli.getRotation2d(), getPositions());
     // SmartDashboard.putNumber("Robot Heading", getHeading());
     // // SmartDashboard.putString("Robot Location",
     // // getPose().getTranslation().toString());
@@ -169,6 +182,31 @@ public class SwerveSubsystem extends SubsystemBase {
 
     // System.out.println(gyro.getAngle());
 
+  }
+
+  public void updateOdometry() {
+    poseEstimator.update(
+        zeppeli.getRotation2d(),
+        getPositions());
+
+    boolean doRejectUpdate = false;
+    LimelightHelpers.SetRobotOrientation("limelight", poseEstimator.getEstimatedPosition().getRotation().getDegrees(),
+        0, 0, 0, 0, 0);
+    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+    if (Math.abs(zeppeli.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore
+                                           // vision updates
+    {
+      doRejectUpdate = true;
+    }
+    if (mt2.tagCount == 0) {
+      doRejectUpdate = true;
+    }
+    if (!doRejectUpdate) {
+      poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+      poseEstimator.addVisionMeasurement(
+          mt2.pose,
+          mt2.timestampSeconds);
+    }
   }
 
   public void stopModules() {

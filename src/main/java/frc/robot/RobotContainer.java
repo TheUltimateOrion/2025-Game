@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.Elevator;
@@ -88,8 +89,8 @@ public class RobotContainer {
                                 .whileTrue(new InstantCommand(() -> elevator.set(Elevator.L2)));
                 new POVButton(coralController, Keybindings.DPAD_DOWN)
                                 .whileTrue(new InstantCommand(() -> elevator.set(Elevator.L3)));
-                //new POVButton(coralController, Keybindings.DPAD_LEFT)
-                //                .whileTrue(new InstantCommand(() -> elevator.set(Elevator.L4)));
+                // new POVButton(coralController, Keybindings.DPAD_LEFT)
+                // .whileTrue(new InstantCommand(() -> elevator.set(Elevator.L4)));
 
                 swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                                 swerveSubsystem,
@@ -98,25 +99,28 @@ public class RobotContainer {
                                 () -> movementController.getRightX()));
         }
 
+        public void updateOdometry() {
+                swerveSubsystem.updateOdometry();
+        }
+
         public Command getAutonomousCommand() {
                 // return new InstantCommand(() -> {
                 // });
-                return new PathPlannerAuto("New Auto");
-                // Pose2d target = new Pose2d(5.095, 2.644, Rotation2d.fromDegrees(-60));
-                // // Create the constraints to use while pathfinding
-                // PathConstraints constraints = new PathConstraints(
-                // 0.5, 1.0,
-                // Units.degreesToRadians(540), Units.degreesToRadians(360));
+                // return new PathPlannerAuto("New Auto");
+                Pose2d target = new Pose2d(5.395, 2.714, Rotation2d.fromDegrees(-60));
+                // Create the constraints to use while pathfinding
+                PathConstraints constraints = new PathConstraints(
+                                0.25, 1.0,
+                                Units.degreesToRadians(90), Units.degreesToRadians(360));
 
-                // // Since AutoBuilder is configured, we can use it to build pathfinding
-                // commands
-                // Command pathfindingCommand = AutoBuilder.pathfindToPose(
-                // target,
-                // constraints,
-                // 0.0 // Goal end velocity in meters/sec
-                // ).andThen(new InstantCommand(() -> elevator.set(Elevator.L2))
-                // .andThen(new ShootNote(shooter, () -> 1.)));
-                // return pathfindingCommand;
+                // Since AutoBuilder is configured, we can use it to build pathfinding commands
+                Command pathfindingCommand = AutoBuilder.pathfindToPose(
+                                target,
+                                constraints,
+                                0.0 // Goal end velocity in meters/sec
+                ).andThen(new InstantCommand(() -> elevator.set(Elevator.L2))).andThen(new WaitCommand(1))
+                                .andThen(new ShootNote(shooter, () -> 1.));
+                return pathfindingCommand;
                 // return new InstantCommand(() -> {
                 // Timer.delay(2);
                 // swerveSubsystem.zeroHeading();
